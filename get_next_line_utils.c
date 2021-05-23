@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:48:01 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/23 17:24:38 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/23 19:42:21 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void print_bytes(char *str)
 	write(1, str, len);
 }
 
-void open_fdesc(int fd)
+void read_on_fdesc(int fd)
 {
 	int ret;
 	char buf[50];
@@ -39,15 +39,15 @@ void open_fdesc(int fd)
 	printf("ret = %d\n", ret);
 	print_bytes(buf);
 }
-		///////////// A TESTER
+		///////////
 
 void cat_bytes_found(char *line_found, char *tmp_bytes);
 
-void read_on_fdesc(int fd, char **readen_bytes, char **line)
+void read_fdesc(int fd, char **readen_bytes, char **line)
 {
 	char *tmp_bytes;
 	char *line_found;
-	
+
 
 }
 
@@ -78,6 +78,6 @@ int	check_nl_eof(char *bytes, int *ret)
 int main()
 {
 	int fd = open("file", O_RDONLY);
-	open_fdesc(fd);
+	read_on_fdesc(fd);
 	return (0);
 }
