@@ -6,41 +6,34 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:47:48 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/22 19:49:11 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/23 17:24:44 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//TEMPORARY INCLUDES
-#include <stdio.h>
-
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 42
-#endif
-
-//MANDATORY PROJECTS INCLUDES
-
-#include <fcntl.h> 		// open
-#include <stdlib.h> 	// malloc, free
-#include <sys/types.h>	// read
-#include <sys/uio.h>	// //
-#include <unistd.h> 	// //
-
-typedef struct s_gnl_datas
-{
-	int ret;			//valeurs de retours (1, 0, -1) / (-2) valeur par defaut ?
-	char *remaining_bytes;	//octets lus
-	t_gnl_datas *next;
-}				t_gnl_datas;
+#include "get_next_line.h"
 
 int get_next_line(int fd, char **line)
 {
-	
+	static char *readen_bytes = 0;
+	int ret;
+
+	ret = -1;
+	if (readen_bytes == 0)
+	{
+		// EXEC READ_FD
+	}
+	else
+	{
+		if (check_nl_eof(readen_bytes, &ret));
+	}
 }
+
+
 
 int main()
 {
-	int fd = open("loremipsum", O_RDONLY);
-	printf("fd = %d\n", fd);
+	int fd = open("file", O_RDONLY);
+	printf("===\tfd = %d\t===\n", fd);
 
 	return (0);
 }
