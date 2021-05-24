@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:48:01 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/24 18:22:57 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/24 19:43:04 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,27 +103,13 @@ int wipe_buffer(char *buffer, char **line, char *readen_bytes)
 	printf("ret_nl_eof = %d | line_len = %d\n", ret_nl_eof, line_len);
 	if (ret_nl_eof != -1)
 	{
-		printf("*line = >%s<\n", *line);
+		printf("before buffercopy *line = >%s<\n", *line);
 		buffer_copy(line, buffer, line_len);	
-		printf("after buffer_copy line = >%s<\n", *line);
+		printf("after buffer_copy *line = >%s<\n", *line);
+		printf("save the remaining if it buffer has some\n");
 	}
 	return (ret_nl_eof);
 }
-
-//////////////
-
-void print_bytes(char *buffer)
-{
-	/*int len;
-
-	  len = 0;
-	  while (str[len] != -1)
-	  len++;*/
-	printf("bufferlen = %d\n", buffer_len(buffer));
-	write(1, buffer, buffer_len(buffer));
-}
-
-///////////
 
 int read_on_fdesc(int fd, char *buffer)
 {
@@ -138,3 +124,12 @@ int read_on_fdesc(int fd, char *buffer)
 	buffer[ret] = -1;
 	return (0);
 }
+
+//////////////
+
+void print_buffer(char *buffer)
+{
+	write(1, buffer, buffer_len(buffer));
+}
+
+///////////

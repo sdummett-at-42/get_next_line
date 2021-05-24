@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:48:16 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/24 17:41:08 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/24 19:43:08 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #ifndef BUFFER_SIZE
 # define BUFFER_SIZE 3
 #endif
-void print_bytes(char *buffer);
+void print_buffer(char *buffer);
 
 //MANDATORY PROJECTS INCLUDES
 

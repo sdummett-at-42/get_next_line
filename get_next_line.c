@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:47:48 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/24 17:55:25 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/24 19:43:10 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ int get_next_line(int fd, char **line)
 {
 	static t_buffer readen_bytes;
 	readen_bytes.smthg_in_buffer = 0;
-	//static char *readen_bytes = 0; //use struct in order to use one static
-	//char *line_found = 0;
 	char *buffer;
 	int retwipebuffer;
 	int ret;
@@ -32,7 +30,7 @@ int get_next_line(int fd, char **line)
 		if (read_on_fdesc(fd, buffer) == -1)
 			return (-1);
 		retwipebuffer = wipe_buffer(buffer, line, readen_bytes.persist_buffer);
-		print_bytes(buffer);
+		print_buffer(buffer);
 		return (retwipebuffer);
 	}
 	else
