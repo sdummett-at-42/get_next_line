@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:48:01 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/24 16:53:18 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/24 18:22:57 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,18 +49,50 @@ int buffer_len(char *buffer)
 void buffer_copy(char **line, char *buffer, int line_len)
 {
 	char *line_temp;
+	char *new_line;
+	int len;
 	int i;
-	
-	line_temp = *line;
-	i = 0;
-	while (i < line_len)
+
+
+	if (*line == 0)
 	{
-		line_temp[i] = buffer[i];
-		i++;
+		line_temp = malloc(sizeof(char) * line_len);
+		i = 0;
+		while (i < line_len)
+		{
+			line_temp[i] = buffer[i];
+			i++;
+		}
+		line_temp[line_len] = 0;
+		*line = line_temp;
 	}
-	line_temp[line_len] = 0;
-	printf("line_len = %d, i = %d\n", line_len, i);
-	printf("line_temp = >%s<\n", line_temp);
+	else
+	{
+		len = 0;
+		line_temp = *line;
+		while (line_temp[len])
+			len++;
+		printf("line_len + len = %d\n", line_len + len);
+		new_line = malloc(sizeof(char) * line_len + len);
+		i = 0;
+		while (line_temp[i] < len)
+		{
+			new_line[i] = line_temp[i];
+			i++;
+		}
+		len = 0;
+		while (len < line_len)
+		{
+			new_line[i] = buffer[len];
+			i++;
+			len++;
+		}
+		new_line[i] = 0;
+		*line = new_line;
+		free(line_temp);
+	}
+	//printf("line_len = %d, i = %d\n", line_len, i);
+	//printf("line_temp = >%s<\n", line_temp);
 }
 
 int wipe_buffer(char *buffer, char **line, char *readen_bytes)
@@ -71,29 +103,27 @@ int wipe_buffer(char *buffer, char **line, char *readen_bytes)
 	printf("ret_nl_eof = %d | line_len = %d\n", ret_nl_eof, line_len);
 	if (ret_nl_eof != -1)
 	{
-		*line = malloc(sizeof(char) * line_len);
+		printf("*line = >%s<\n", *line);
 		buffer_copy(line, buffer, line_len);	
 		printf("after buffer_copy line = >%s<\n", *line);
 	}
 	return (ret_nl_eof);
 }
 
-
-
-		//////////////
+//////////////
 
 void print_bytes(char *buffer)
 {
 	/*int len;
 
-	len = 0;
-	while (str[len] != -1)
-		len++;*/
+	  len = 0;
+	  while (str[len] != -1)
+	  len++;*/
 	printf("bufferlen = %d\n", buffer_len(buffer));
 	write(1, buffer, buffer_len(buffer));
 }
 
-		///////////
+///////////
 
 int read_on_fdesc(int fd, char *buffer)
 {

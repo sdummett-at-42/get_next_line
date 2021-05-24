@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:47:48 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/24 16:53:23 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/24 17:55:25 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int get_next_line(int fd, char **line)
 	int retwipebuffer;
 	int ret;
 
+	*line = 0;
 	ret = -1;
 	if (readen_bytes.persist_buffer == 0)
 	{
