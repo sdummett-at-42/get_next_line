@@ -35,4 +35,4 @@ typedef struct s_buffer
 int check_nl_eof(char *bytes, int *ret);
 int read_on_fdesc(int fd, char *buffer);
 int buffer_is_nl_eof(char *buffer, int *line_len);
-int wipe_buffer(char *buffer, char **line_found, char *readen_bytes);
+int wipe_buffer(char *buffer, char **line_found, t_buffer **perst_buf);

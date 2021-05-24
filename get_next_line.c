@@ -14,22 +14,21 @@
 
 int get_next_line(int fd, char **line)
 {
-	static t_buffer readen_bytes;
-	readen_bytes.smthg_in_buffer = 0;
+	static t_buffer *perst_buf = 0;
 	char *buffer;
 	int retwipebuffer;
 	int ret;
 
 	*line = 0;
 	ret = -1;
-	if (readen_bytes.persist_buffer == 0)
+	if (perst_buf == 0)
 	{
 		buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 		if (!buffer)
 			return (-1);
 		if (read_on_fdesc(fd, buffer) == -1)
 			return (-1);
-		retwipebuffer = wipe_buffer(buffer, line, readen_bytes.persist_buffer);
+		retwipebuffer = wipe_buffer(buffer, line, &perst_buf);
 		print_buffer(buffer);
 		return (retwipebuffer);
 	}
@@ -38,7 +37,7 @@ int get_next_line(int fd, char **line)
 		//BELOW IS UNDER DEVELOPMENT
 		return (-255);
 		int line_len = 0;
-		if (buffer_is_nl_eof(readen_bytes.persist_buffer, &line_len))
+		if (buffer_is_nl_eof(perst_buf->persist_buffer, &line_len))
 		{
 			printf("Cut the line, and put it in *line_found && reajust *readen_bytes.\n");
 			printf("Return the right value.\n");

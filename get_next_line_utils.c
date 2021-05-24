@@ -95,18 +95,51 @@ void buffer_copy(char **line, char *buffer, int line_len)
 	//printf("line_temp = >%s<\n", line_temp);
 }
 
-int wipe_buffer(char *buffer, char **line, char *readen_bytes)
+int wipe_buffer(char *buffer, char **line, t_buffer **perst_buf)
 {
+	int i;
 	int line_len = 0;
 	int buffer_leng = buffer_len(buffer);
 	int ret_nl_eof = buffer_is_nl_eof(buffer, &line_len);
-	printf("ret_nl_eof = %d | line_len = %d\n", ret_nl_eof, line_len);
+	t_buffer *tmp;
+
+	tmp = *perst_buf;
+	printf("buffer_leng = %d | line_len = %d\n", buffer_leng, line_len);
 	if (ret_nl_eof != -1)
 	{
-		printf("before buffercopy *line = >%s<\n", *line);
-		buffer_copy(line, buffer, line_len);	
-		printf("after buffer_copy *line = >%s<\n", *line);
-		printf("save the remaining if it buffer has some\n");
+		buffer_copy(line, buffer, line_len);
+		i = 0;
+       		while (buffer[i + line_len + 1] != -1)
+			i++;
+		printf("i = %d\n", i);
+		if (i)
+		{
+			if (!tmp)
+			{
+				tmp = malloc(sizeof(t_buffer) * 1);
+				if (!tmp)
+					return (-1);
+			}
+			char *new_buf = malloc(sizeof(char) * i + 1);
+			i = 0;
+			while(buffer[i + line_len + 1] != -1)
+			{
+				new_buf[i] = buffer[i + line_len + 1];
+				//tmp->persist_buffer[i] = buffer[i + line_len + 1];
+				i++;
+			}
+			new_buf[i] = -1;
+			//tmp->persist_buffer[i] = -1;
+
+
+			write(1, "--", 2);
+			print_buffer(new_buf);
+			//print_buffer(tmp->persist_buffer);
+			write(1, "--", 2);
+			//tmp->persist_buffer = new_buf;
+			//free(buffer);
+		}
+		
 	}
 	return (ret_nl_eof);
 }
