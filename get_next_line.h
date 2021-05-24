@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:48:16 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/23 17:24:47 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/24 17:41:08 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 #include <stdio.h>
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 42
+# define BUFFER_SIZE 3
 #endif
+void print_bytes(char *buffer);
 
 //MANDATORY PROJECTS INCLUDES
 
@@ -25,12 +26,13 @@
 #include <sys/uio.h>	// //
 #include <unistd.h> 	// //
 
-typedef struct s_gnl_datas
+typedef struct s_buffer
 {
-	int ret;			//valeurs de retours (1, 0, -1) / (-2) valeur par defaut ?
-	char *remaining_bytes;	//octets lus
-	struct s_gnl_datas *next;
-}				t_gnl_datas;
-
+	int smthg_in_buffer; // 1 = YES | 0 = NO
+	char *persist_buffer;
+}				t_buffer;
 
 int check_nl_eof(char *bytes, int *ret);
+int read_on_fdesc(int fd, char *buffer);
+int buffer_is_nl_eof(char *buffer, int *line_len);
+int wipe_buffer(char *buffer, char **line_found, char *readen_bytes);
