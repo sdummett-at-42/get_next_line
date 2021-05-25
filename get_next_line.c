@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:47:48 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/25 17:02:06 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/25 18:42:26 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,11 @@ int get_next_line(int fd, char **line)
 		int ret_type = buffer_is_nl_eof(perst_buf->persist_buffer, &line_len);
 		if (ret_type != -1)
 		{
-			printf("Cut the line, and put it in *line && reajust *perst_buf.\n");
-			printf("Return the right value.\n");
 			perst_buf_copy(&perst_buf, line, line_len, 1);
 			return (ret_type);
 		}
 		else
 		{	
-			printf("Put the readen bytes in *line && set *perst_buf at NULL.\n");
 			perst_buf_copy(&perst_buf, line, perstbuf_len, 0);
 			buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 			if (!buffer)
@@ -77,23 +74,48 @@ int get_next_line(int fd, char **line)
 
 int main()
 {
-	int fd = open("file", O_RDONLY);
-	printf("===\tfd = %d\t===\n", fd);
-
+	int fd = open("loremipsum", O_RDONLY);
 	char *line;
 	int gnl_ret;
+
+	printf(MAGENTA "====================================\n");
+	printf(		   "==========   APPEL DE GNL  =========\n");
+	printf(        "====================================\n" RESET);
 	gnl_ret = get_next_line(fd, &line);
-	printf("~~~ gnl_ret = %d ~~~\n", gnl_ret);
-	printf("line = >%s<\n", line);
-	printf("====================================\n");
-	printf("====================================\n");
+	printf("%d", gnl_ret);
+	printf(GREEN   "||%s||\n"                   RESET , line);
+	free(line);
+
+	printf(MAGENTA "====================================\n");
+	printf(		   "==========   APPEL DE GNL  =========\n");
+	printf(        "====================================\n" RESET);
 	gnl_ret = get_next_line(fd, &line);
-	printf("~~~ gnl_ret = %d ~~~\n", gnl_ret);
-	printf("line = >%s<\n", line);
-	printf("====================================\n");
-	printf("====================================\n");
+	printf("%d", gnl_ret);
+	printf(GREEN   "||%s||\n"                   RESET , line);
+	free(line);
+
+	printf(MAGENTA "====================================\n");
+	printf(		   "==========   APPEL DE GNL  =========\n");
+	printf(        "====================================\n" RESET);
 	gnl_ret = get_next_line(fd, &line);
-	printf("~~~ gnl_ret = %d ~~~\n", gnl_ret);
-	printf("line = >%s<\n", line);
+	printf("%d", gnl_ret);
+	printf(GREEN   "||%s||\n"                   RESET , line);
+	free(line);
+
+	printf(MAGENTA "====================================\n");
+	printf(		   "==========   APPEL DE GNL  =========\n");
+	printf(        "====================================\n" RESET);
+	gnl_ret = get_next_line(fd, &line);
+	printf("%d", gnl_ret);
+	printf(GREEN   "||%s||\n"                   RESET , line);
+	free(line);
+
+	printf(MAGENTA "====================================\n");
+	printf(		   "==========   APPEL DE GNL  =========\n");
+	printf(        "====================================\n" RESET);
+	gnl_ret = get_next_line(fd, &line);
+	printf("%d", gnl_ret);
+	printf(GREEN   "||%s||\n"                   RESET , line);
+	free(line);
 	return (0);
 }
