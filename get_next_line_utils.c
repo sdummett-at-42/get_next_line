@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:48:01 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/25 14:18:06 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/25 16:52:07 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,54 +50,58 @@ void perst_buf_copy(t_buffer **perst_buf, char **line, int line_len, int signal)
 	int i;	
 	t_buffer *tmp;
 	char *new_line;
+	char *line_temp;
+	int len;
 
 	i = 0;
 	tmp = *perst_buf;	
-	printf("line_len = %d\n", line_len);
+	line_temp = *line;
 	if (!signal)
 	{
-		*line = malloc(sizeof(char) * line_len + 1);
-		while (i < line_len)
+		line_temp = malloc(sizeof(char) * line_len);
+		while (i < line_len - 1)//line_len)
+		//while (tmp->persist_buffer[i] != -1)
 		{
-			//*line[i] = *perst_buf->persist_buffer[i];
-			*line[i] = tmp->persist_buffer[i];
+			line_temp[i] = tmp->persist_buffer[i];
 			i++;
 		}
-		*line[i] = 0;
-		//free(*perst_buf->persist_buffer);
+		line_temp[i] = 0;
+		*line = line_temp;
 		free(tmp->persist_buffer);
 		free(*perst_buf);
 		*perst_buf = 0;
 	}
 	else
 	{
-		printf("CHECK\n");
-		new_line = malloc(sizeof(char) * line_len);
-		while (i < line_len)
-		{
-			new_line[i] = tmp->persist_buffer[i];
-			i++;
-		}
-		new_line[i] = 0;
-		*line = new_line;
-		i = 0;
-		while (tmp->persist_buffer[i + line_len] != -1)
-		{
-			i++;
-		}
-		new_line = malloc(sizeof(char) * i + 1);
-		i = 0;
-		while (tmp->persist_buffer[line_len] != -1)
-		{
-			new_line[i] = tmp->persist_buffer[line_len];
-			i++;
-			line_len++;
-		}
-		new_line[i] = -1;
-		free(tmp->persist_buffer);
-		tmp->persist_buffer = new_line;
+			printf("YO\n");
+			new_line = malloc(sizeof(char) * line_len + 1);
+			while (i < line_len)
+			{
+				new_line[i] = tmp->persist_buffer[i];
+				i++;
+			}
+			new_line[i] = 0;
+			*line = new_line;
+			i = 0;
+			while (tmp->persist_buffer[i + line_len] != -1)
+			{
+				i++;
+			}
+			new_line = malloc(sizeof(char) * i + 1);
+			i = 0;
+			while (tmp->persist_buffer[line_len] != -1)
+			{
+				new_line[i] = tmp->persist_buffer[line_len];
+				i++;
+				line_len++;
+			}
+			new_line[i] = -1;
+			free(tmp->persist_buffer);
+			tmp->persist_buffer = new_line;
 	}
 }
+
+/// CREER UNE FONCTION SPECIFIQUE POUR *line
 
 void buffer_copy(char **line, char *buffer, int line_len)
 {
@@ -156,8 +160,11 @@ int wipe_buffer(char *buffer, char **line, t_buffer **perst_buf)
 	t_buffer *tmp;
 
 	tmp = *perst_buf;
+	if (tmp)
+		print_buffer(tmp->persist_buffer);
 	if (ret_nl_eof != -1)
 	{
+	printf("WIPE BUFFER\n");
 		buffer_copy(line, buffer, line_len);
 		i = 0;
 		while (buffer[i + line_len + 1] != -1)
