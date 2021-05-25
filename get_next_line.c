@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:47:48 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/25 19:55:01 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/25 20:09:14 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int get_next_line(int fd, char **line)
 			if (read_on_fdesc(fd, buffer) == -1)
 				return (-1);
 			retwipebuffer = wipe_buffer(buffer, line, &perst_buf);
-			printf(YELLOW "1 - >>>%s<<<\n" RESET, *line);
+			//printf(YELLOW "1 - >>>%s<<<\n" RESET, *line);
 		}
 		free(buffer);
 		//// A mettre dans une fonction ? ////
@@ -51,10 +51,10 @@ int get_next_line(int fd, char **line)
 		int ret_type = buffer_is_nl_eof(perst_buf->persist_buffer, &line_len);
 		if (ret_type != -1)
 		{
-			print_buffer(perst_buf->persist_buffer);
-			printf(YELLOW "2 - >>>line_len = %d<<<\n" RESET, line_len);
+			//print_buffer(perst_buf->persist_buffer);
+			//printf(YELLOW "2 - >>>line_len = %d<<<\n" RESET, line_len);
 			perst_buf_copy(&perst_buf, line, line_len, 1);
-			printf(YELLOW "2 - >>>%s<<<\n" RESET, *line);
+			//printf(YELLOW "2 - >>>%s<<<\n" RESET, *line);
 			return (ret_type);
 		}
 		else
@@ -68,7 +68,7 @@ int get_next_line(int fd, char **line)
 				if (read_on_fdesc(fd, buffer) == -1)
 					return (-1);
 				retwipebuffer = wipe_buffer(buffer, line, &perst_buf);
-				printf(YELLOW "3 - >>>%s<<<\n" RESET, *line);
+				//printf(YELLOW "3 - >>>%s<<<\n" RESET, *line);
 			}
 			free(buffer);
 			return (retwipebuffer);
