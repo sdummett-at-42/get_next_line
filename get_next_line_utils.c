@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:48:01 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/25 20:07:44 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/25 20:09:57 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void perst_buf_copy(t_buffer **perst_buf, char **line, int line_len, int signal)
 				line_len++;
 			}
 			new_line[i] = -1;
-			print_buffer(new_line);
+			//print_buffer(new_line);
 			free(tmp->persist_buffer);
 			tmp->persist_buffer = new_line;
 	}

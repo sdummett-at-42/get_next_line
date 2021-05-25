@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:47:48 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/25 20:09:14 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/25 20:11:08 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ int main()
 	printf("%d", gnl_ret);
 	printf(GREEN   "||%s||\n"                   RESET , line);
 	free(line);
-return 0;
+//return 0;
 	printf(MAGENTA "====================================\n");
 	printf(		   "==========   APPEL DE GNL  =========\n");
 	printf(        "====================================\n" RESET);
