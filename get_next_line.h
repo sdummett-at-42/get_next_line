@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:48:16 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/24 19:43:08 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/25 11:40:13 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct s_buffer
 	char *persist_buffer;
 }				t_buffer;
 
+int buffer_len(char *buffer);
 int check_nl_eof(char *bytes, int *ret);
 int read_on_fdesc(int fd, char *buffer);
 int buffer_is_nl_eof(char *buffer, int *line_len);

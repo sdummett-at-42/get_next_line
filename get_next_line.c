@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:47:48 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/24 19:43:10 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/25 12:30:28 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,29 @@ int get_next_line(int fd, char **line)
 	int retwipebuffer;
 	int ret;
 
+	// INIT *line a NULL;
 	*line = 0;
 	ret = -1;
+	retwipebuffer = -1;
 	if (perst_buf == 0)
 	{
 		buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 		if (!buffer)
 			return (-1);
-		if (read_on_fdesc(fd, buffer) == -1)
-			return (-1);
-		retwipebuffer = wipe_buffer(buffer, line, &perst_buf);
-		print_buffer(buffer);
+		while (retwipebuffer == -1)
+		{
+			if (read_on_fdesc(fd, buffer) == -1)
+				return (-1);
+			retwipebuffer = wipe_buffer(buffer, line, &perst_buf);
+			printf("*line in gnl = >%s<\n", *line);
+			if (perst_buf == 0)
+				printf("t_buffer *perst_buf EST NULL\n");
+			else
+				printf("t_buffer *perst_buf n'est pas NULL\n");
+			//print_buffer(perst_buf->persist_buffer);
+		}
+		//print_buffer(buffer);
+		free(buffer);
 		return (retwipebuffer);
 	}
 	else
