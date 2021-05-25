@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:48:01 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/25 16:52:07 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/25 17:02:46 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,11 @@ void perst_buf_copy(t_buffer **perst_buf, char **line, int line_len, int signal)
 	line_temp = *line;
 	if (!signal)
 	{
-		line_temp = malloc(sizeof(char) * line_len);
-		while (i < line_len - 1)//line_len)
-		//while (tmp->persist_buffer[i] != -1)
+		line_len = 0;
+		while (tmp->persist_buffer[line_len] != -1)
+			line_len++;
+		line_temp = malloc(sizeof(char) * line_len + 1);
+		while (i < line_len)
 		{
 			line_temp[i] = tmp->persist_buffer[i];
 			i++;
@@ -73,7 +75,6 @@ void perst_buf_copy(t_buffer **perst_buf, char **line, int line_len, int signal)
 	}
 	else
 	{
-			printf("YO\n");
 			new_line = malloc(sizeof(char) * line_len + 1);
 			while (i < line_len)
 			{
@@ -164,7 +165,6 @@ int wipe_buffer(char *buffer, char **line, t_buffer **perst_buf)
 		print_buffer(tmp->persist_buffer);
 	if (ret_nl_eof != -1)
 	{
-	printf("WIPE BUFFER\n");
 		buffer_copy(line, buffer, line_len);
 		i = 0;
 		while (buffer[i + line_len + 1] != -1)

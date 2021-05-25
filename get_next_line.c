@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:47:48 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/25 16:52:09 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/25 17:02:06 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,6 @@ int get_next_line(int fd, char **line)
 			if (read_on_fdesc(fd, buffer) == -1)
 				return (-1);
 			retwipebuffer = wipe_buffer(buffer, line, &perst_buf);
-			if (perst_buf == 0)
-				printf("t_buffer *perst_buf EST NULL\n");
-			else
-				printf("t_buffer *perst_buf n'est pas NULL\n");
 		}
 		free(buffer);
 		//// A mettre dans une fonction ? ////
@@ -63,9 +59,6 @@ int get_next_line(int fd, char **line)
 		{	
 			printf("Put the readen bytes in *line && set *perst_buf at NULL.\n");
 			perst_buf_copy(&perst_buf, line, perstbuf_len, 0);
-			printf("LIIIIINE = >%s<\n", *line);
-			if (perst_buf)
-				printf("perst_buf not NULL\n");
 			buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 			if (!buffer)
 				return (-1);
@@ -74,10 +67,6 @@ int get_next_line(int fd, char **line)
 				if (read_on_fdesc(fd, buffer) == -1)
 					return (-1);
 				retwipebuffer = wipe_buffer(buffer, line, &perst_buf);
-				if (perst_buf == 0)
-					printf("t_buffer *perst_buf EST NULL\n");
-				else
-					printf("t_buffer *perst_buf n'est pas NULL\n");
 			}
 			free(buffer);
 			return (retwipebuffer);
@@ -93,6 +82,11 @@ int main()
 
 	char *line;
 	int gnl_ret;
+	gnl_ret = get_next_line(fd, &line);
+	printf("~~~ gnl_ret = %d ~~~\n", gnl_ret);
+	printf("line = >%s<\n", line);
+	printf("====================================\n");
+	printf("====================================\n");
 	gnl_ret = get_next_line(fd, &line);
 	printf("~~~ gnl_ret = %d ~~~\n", gnl_ret);
 	printf("line = >%s<\n", line);
