@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:48:01 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/25 14:00:57 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/25 14:18:06 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,14 @@ void perst_buf_copy(t_buffer **perst_buf, char **line, int line_len, int signal)
 {
 	int i;	
 	t_buffer *tmp;
+	char *new_line;
 
+	i = 0;
 	tmp = *perst_buf;	
 	printf("line_len = %d\n", line_len);
 	if (!signal)
 	{
 		*line = malloc(sizeof(char) * line_len + 1);
-		i = 0;
 		while (i < line_len)
 		{
 			//*line[i] = *perst_buf->persist_buffer[i];
@@ -70,7 +71,31 @@ void perst_buf_copy(t_buffer **perst_buf, char **line, int line_len, int signal)
 	}
 	else
 	{
-		
+		printf("CHECK\n");
+		new_line = malloc(sizeof(char) * line_len);
+		while (i < line_len)
+		{
+			new_line[i] = tmp->persist_buffer[i];
+			i++;
+		}
+		new_line[i] = 0;
+		*line = new_line;
+		i = 0;
+		while (tmp->persist_buffer[i + line_len] != -1)
+		{
+			i++;
+		}
+		new_line = malloc(sizeof(char) * i + 1);
+		i = 0;
+		while (tmp->persist_buffer[line_len] != -1)
+		{
+			new_line[i] = tmp->persist_buffer[line_len];
+			i++;
+			line_len++;
+		}
+		new_line[i] = -1;
+		free(tmp->persist_buffer);
+		tmp->persist_buffer = new_line;
 	}
 }
 

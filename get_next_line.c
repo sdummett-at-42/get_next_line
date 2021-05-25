@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:47:48 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/25 14:01:21 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/25 14:18:58 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ int get_next_line(int fd, char **line)
 		{
 			printf("Cut the line, and put it in *line && reajust *perst_buf.\n");
 			printf("Return the right value.\n");
-			//perst_buf_copy(&perst_buf, line, line_len, 1);
+			perst_buf_copy(&perst_buf, line, line_len, 1);
+			printf("LIIINE = >%s<\n", *line);
 			return (ret_type);
 		}
 		else
