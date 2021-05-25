@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:48:01 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/25 17:45:29 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/25 19:51:19 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ void perst_buf_copy(t_buffer **perst_buf, char **line, int line_len, int signal)
 	}
 	else
 	{
+		// ISSUE RIGHT HERE
 			new_line = malloc(sizeof(char) * line_len + 1);
 			while (i < line_len)
 			{
