@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:48:16 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/25 11:40:13 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/25 13:58:51 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,3 +37,4 @@ int check_nl_eof(char *bytes, int *ret);
 int read_on_fdesc(int fd, char *buffer);
 int buffer_is_nl_eof(char *buffer, int *line_len);
 int wipe_buffer(char *buffer, char **line_found, t_buffer **perst_buf);
+void perst_buf_copy(t_buffer **perst_buffer, char **line, int line_len, int signal);

@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:47:48 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/25 12:30:28 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/25 14:01:21 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,10 @@ int get_next_line(int fd, char **line)
 	*line = 0;
 	ret = -1;
 	retwipebuffer = -1;
+
 	if (perst_buf == 0)
 	{
+		//// A mettre dans une fonction ? ////
 		buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 		if (!buffer)
 			return (-1);
@@ -38,27 +40,51 @@ int get_next_line(int fd, char **line)
 				printf("t_buffer *perst_buf EST NULL\n");
 			else
 				printf("t_buffer *perst_buf n'est pas NULL\n");
-			//print_buffer(perst_buf->persist_buffer);
 		}
-		//print_buffer(buffer);
 		free(buffer);
+		//// A mettre dans une fonction ? ////
 		return (retwipebuffer);
 	}
 	else
 	{
-		//BELOW IS UNDER DEVELOPMENT
-		return (-255);
-		int line_len = 0;
-		if (buffer_is_nl_eof(perst_buf->persist_buffer, &line_len))
+		// BELOW IS UNDER DEVELOPMENT
+		int perstbuf_len = 0;
+		while (perst_buf->persist_buffer[perstbuf_len])
+			perstbuf_len++;
+		printf("perstbuf_len = %d\n", perstbuf_len);
+		int line_len = -1;
+		int buffer_len = 0;
+		int ret_type = buffer_is_nl_eof(perst_buf->persist_buffer, &line_len);
+		if (ret_type != -1)
 		{
-			printf("Cut the line, and put it in *line_found && reajust *readen_bytes.\n");
+			printf("Cut the line, and put it in *line && reajust *perst_buf.\n");
 			printf("Return the right value.\n");
-			return (-255);
+			//perst_buf_copy(&perst_buf, line, line_len, 1);
+			return (ret_type);
 		}
 		else
-		{
-			printf("Put the readen bytes in *line_found && set *readen at NULL.\n");
-			read_on_fdesc(fd, buffer);
+		{	
+			printf("Put the readen bytes in *line && set *perst_buf at NULL.\n");
+			perst_buf_copy(&perst_buf, line, line_len, 0);
+			//perst_buf = 0;
+			if (perst_buf)
+				printf("perst_buf no NULL\n");
+			buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
+			if (!buffer)
+				return (-1);
+			while (retwipebuffer == -1)
+			{
+				if (read_on_fdesc(fd, buffer) == -1)
+					return (-1);
+				retwipebuffer = wipe_buffer(buffer, line, &perst_buf);
+				printf("*line in gnl = >%s<\n", *line);
+				if (perst_buf == 0)
+					printf("t_buffer *perst_buf EST NULL\n");
+				else
+					printf("t_buffer *perst_buf n'est pas NULL\n");
+			}
+			free(buffer);
+			return (retwipebuffer);
 		}
 	}
 	return (-255);
@@ -70,9 +96,12 @@ int main()
 	printf("===\tfd = %d\t===\n", fd);
 
 	char *line;
-	int gnl_ret = get_next_line(fd, &line);
+	int gnl_ret;
+	gnl_ret = get_next_line(fd, &line);
 	printf("~~~ gnl_ret = %d ~~~\n", gnl_ret);
-	printf("line = >%s<", line);
-
+	printf("line = >%s<\n", line);
+	gnl_ret = get_next_line(fd, &line);
+	printf("~~~ gnl_ret = %d ~~~\n", gnl_ret);
+	printf("line = >%s<\n", line);
 	return (0);
 }

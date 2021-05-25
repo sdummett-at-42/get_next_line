@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:48:01 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/25 12:30:25 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/25 14:00:57 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int	buffer_is_nl_eof(char *buffer, int *line_len)
 		}
 		i++;
 	}
+	// return 1 = LINE / 0 = EOF / -1 NO LINE FOUND
 	return (-1);
 }
 
@@ -42,6 +43,35 @@ int buffer_len(char *buffer)
 	while (buffer[len] != -1)
 		len++;
 	return (len);
+}
+
+void perst_buf_copy(t_buffer **perst_buf, char **line, int line_len, int signal)
+{
+	int i;	
+	t_buffer *tmp;
+
+	tmp = *perst_buf;	
+	printf("line_len = %d\n", line_len);
+	if (!signal)
+	{
+		*line = malloc(sizeof(char) * line_len + 1);
+		i = 0;
+		while (i < line_len)
+		{
+			//*line[i] = *perst_buf->persist_buffer[i];
+			*line[i] = tmp->persist_buffer[i];
+			i++;
+		}
+		*line[i] = 0;
+		//free(*perst_buf->persist_buffer);
+		free(tmp->persist_buffer);
+		free(*perst_buf);
+		*perst_buf = 0;
+	}
+	else
+	{
+		
+	}
 }
 
 void buffer_copy(char **line, char *buffer, int line_len)
@@ -105,7 +135,7 @@ int wipe_buffer(char *buffer, char **line, t_buffer **perst_buf)
 	{
 		buffer_copy(line, buffer, line_len);
 		i = 0;
-       		while (buffer[i + line_len + 1] != -1)
+		while (buffer[i + line_len + 1] != -1)
 			i++;
 		if (i)
 		{
