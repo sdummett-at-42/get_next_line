@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:48:01 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/25 20:09:57 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/26 12:49:09 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	buffer_is_nl_eof(char *buffer, int *line_len)
 		else if (buffer[i] == '\0')
 		{
 			*line_len = i;
+			printf("RETURN 0\n");
 			return (0);
 		}
 		i++;
@@ -45,61 +46,62 @@ int buffer_len(char *buffer)
 	return (len);
 }
 
-void perst_buf_copy(t_buffer **perst_buf, char **line, int line_len, int signal)
+void perst_buf_copy(t_buffer *perst_buf, char **line, int line_len, int signal)
 {
 	int i;	
-	t_buffer *tmp;
+	t_buffer tmp;
 	char *new_line;
 	char *line_temp;
 	int len;
 
 	i = 0;
-	tmp = *perst_buf;	
+	//tmp = *perst_buf;	
+	tmp = *perst_buf;
 	line_temp = *line;
 	if (!signal)
 	{
 		line_len = 0;
-		while (tmp->persist_buffer[line_len] != -1)
+		while (tmp.persist_buffer[line_len] != -1)
 			line_len++;
 		line_temp = malloc(sizeof(char) * line_len + 1);
 		while (i < line_len)
 		{
-			line_temp[i] = tmp->persist_buffer[i];
+			line_temp[i] = tmp.persist_buffer[i];
 			i++;
 		}
 		line_temp[i] = 0;
 		*line = line_temp;
-		free(tmp->persist_buffer);
-		free(*perst_buf);
-		*perst_buf = 0;
+		free(tmp.persist_buffer);
+		//free(*perst_buf);
+		//*perst_buf = 0;
 	}
 	else
 	{
-			new_line = malloc(sizeof(char) * line_len + 1);
-			while (i < line_len)
-			{
-				new_line[i] = tmp->persist_buffer[i];
-				i++;
-			}
-			new_line[i] = 0;
-			*line = new_line;
-			i = 0;
-			while (tmp->persist_buffer[i + line_len] != -1)
-			{
-				i++;
-			}
-			new_line = malloc(sizeof(char) * i + 1);
-			i = 0;
-			while (tmp->persist_buffer[line_len + 1] != -1)
-			{
-				new_line[i] = tmp->persist_buffer[line_len + 1];
-				i++;
-				line_len++;
-			}
-			new_line[i] = -1;
-			//print_buffer(new_line);
-			free(tmp->persist_buffer);
-			tmp->persist_buffer = new_line;
+		new_line = malloc(sizeof(char) * line_len + 1);
+		while (i < line_len)
+		{
+			new_line[i] = tmp.persist_buffer[i];
+			i++;
+		}
+		new_line[i] = 0;
+		*line = new_line;
+		i = 0;
+		while (tmp.persist_buffer[i + line_len] != -1)
+		{
+			i++;
+		}
+		new_line = malloc(sizeof(char) * i + 1);
+		i = 0;
+		while (tmp.persist_buffer[line_len + 1] != -1)
+		{
+			new_line[i] = tmp.persist_buffer[line_len + 1];
+			i++;
+			line_len++;
+		}
+		new_line[i] = -1;
+		//print_buffer(new_line);
+		free(tmp.persist_buffer);
+		tmp.persist_buffer = new_line;
 	}
 }
 
@@ -132,38 +134,42 @@ void buffer_copy(char **line, char *buffer, int line_len)
 		{
 			len++;
 		}
-		new_line = malloc(sizeof(char) * line_len + len + 1);
-		i = 0;
-		while (i < len)
+		if (len || line_len)
 		{
-			new_line[i] = line_temp[i];
-			i++;
+			new_line = malloc(sizeof(char) * line_len + len + 1);
+			i = 0;
+			while (i < len)
+			{
+				new_line[i] = line_temp[i];
+				i++;
+			}
+			len = 0;
+			while (len < line_len)
+			{
+				new_line[i] = buffer[len];
+				i++;
+				len++;
+			}
+			new_line[i] = 0;
+			*line = new_line;
+			free(line_temp);
 		}
-		len = 0;
-		while (len < line_len)
-		{
-			new_line[i] = buffer[len];
-			i++;
-			len++;
-		}
-		new_line[i] = 0;
-		*line = new_line;
-		free(line_temp);
+		else
+			*line = 0;
 	}
-
 }
 
-int wipe_buffer(char *buffer, char **line, t_buffer **perst_buf)
+int wipe_buffer(char *buffer, char **line, t_buffer *perst_buf)
 {
 	int i;
 	int line_len = 0;
 	int buffer_leng = buffer_len(buffer);
 	int ret_nl_eof = buffer_is_nl_eof(buffer, &line_len);
-	t_buffer *tmp;
+	t_buffer tmp;
 
 	tmp = *perst_buf;
-	if (tmp)
-		print_buffer(tmp->persist_buffer);
+	if (tmp.persist_buffer)
+		print_buffer(tmp.persist_buffer);
 	if (ret_nl_eof != -1)
 	{
 		buffer_copy(line, buffer, line_len);
@@ -172,20 +178,20 @@ int wipe_buffer(char *buffer, char **line, t_buffer **perst_buf)
 			i++;
 		if (i)
 		{
-			if (!tmp)
+			if (!tmp.persist_buffer)
 			{
-				tmp = malloc(sizeof(t_buffer) * 1);
-				if (!tmp)
+				tmp.persist_buffer = malloc(sizeof(t_buffer) * 1);
+				if (!tmp.persist_buffer)
 					return (-1);
 			}
-			tmp->persist_buffer = malloc(sizeof(char) * i + 1);
+			tmp.persist_buffer = malloc(sizeof(char) * i + 1);
 			i = 0;
 			while (buffer[i + line_len + 1] != -1)
 			{
-				tmp->persist_buffer[i] = buffer[i + line_len + 1];
+				tmp.persist_buffer[i] = buffer[i + line_len + 1];
 				i++;
 			}
-			tmp->persist_buffer[i] = -1;
+			tmp.persist_buffer[i] = -1;
 			*perst_buf = tmp;
 		}
 	}
@@ -208,7 +214,17 @@ int read_on_fdesc(int fd, char *buffer)
 		write(1, "Something wrong happened during the read.\n", 42);
 		return (-1);
 	}
-	buffer[ret] = -1;
+	buffer[ret ] = -1;
+	/// test
+	int i = 0;
+	while (buffer[i] != -1)
+	{
+		printf("[%d]", buffer[i]);
+		i++;
+	}
+	printf("ret = %d | i = %d\n", ret, i);
+	printf("\n");
+	/// test
 	return (0);
 }
 

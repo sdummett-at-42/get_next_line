@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:47:48 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/25 20:11:08 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/26 12:49:03 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,64 +14,78 @@
 
 int get_next_line(int fd, char **line)
 {
-	static t_buffer *perst_buf = 0;
+	//static t_buffer *perst_buf = 0;
+	static t_buffer perst_buf;
 	char *buffer;
-	int retwipebuffer;
+	int is_nl_or_eof;
 	int ret;
 
+	perst_buf.persist_buffer = 0;
 	// INIT *line a NULL;
 	*line = 0;
 	ret = -1;
-	retwipebuffer = -1;
+	is_nl_or_eof = -1;
 
-	if (perst_buf == 0)
+	if (perst_buf.persist_buffer == 0)
 	{
 		//// A mettre dans une fonction ? ////
 		buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 		if (!buffer)
 			return (-1);
-		while (retwipebuffer == -1)
+		while (is_nl_or_eof == -1)
 		{
 			if (read_on_fdesc(fd, buffer) == -1)
 				return (-1);
-			retwipebuffer = wipe_buffer(buffer, line, &perst_buf);
-			//printf(YELLOW "1 - >>>%s<<<\n" RESET, *line);
+			is_nl_or_eof = wipe_buffer(buffer, line, &perst_buf);
+			if (*line == 0)
+				return (-1);
 		}
 		free(buffer);
 		//// A mettre dans une fonction ? ////
-		return (retwipebuffer);
+		printf("1 - is_nl_or_eof == %d\n", is_nl_or_eof);
+		return (is_nl_or_eof);
 	}
 	else
 	{
+		// test
+		/*
+		int i = 0;
+		char *tmp = perst_buf->persist_buffer;
+		while (tmp[i] != -1)
+		{
+			printf("[%d]", tmp[i]);
+			i++;
+		}
+		printf("\n");
+		*/
+		//test
 		int perstbuf_len = 0;
-		while (perst_buf->persist_buffer[perstbuf_len])
+		while (perst_buf.persist_buffer[perstbuf_len])
 			perstbuf_len++;
 		int line_len = -1;
 		int buffer_len = 0;
-		int ret_type = buffer_is_nl_eof(perst_buf->persist_buffer, &line_len);
-		if (ret_type != -1)
+		is_nl_or_eof = buffer_is_nl_eof(perst_buf.persist_buffer, &line_len);
+		if (is_nl_or_eof != -1)
 		{
-			//print_buffer(perst_buf->persist_buffer);
-			//printf(YELLOW "2 - >>>line_len = %d<<<\n" RESET, line_len);
 			perst_buf_copy(&perst_buf, line, line_len, 1);
-			//printf(YELLOW "2 - >>>%s<<<\n" RESET, *line);
-			return (ret_type);
+			printf("2 - is_nl_or_eof == %d\n", is_nl_or_eof);
+			return (is_nl_or_eof);
 		}
 		else
-		{	
+		{
 			perst_buf_copy(&perst_buf, line, perstbuf_len, 0);
 			buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 			if (!buffer)
 				return (-1);
-			while (retwipebuffer == -1)
+			while (is_nl_or_eof == -1)
 			{
 				if (read_on_fdesc(fd, buffer) == -1)
 					return (-1);
-				retwipebuffer = wipe_buffer(buffer, line, &perst_buf);
-				//printf(YELLOW "3 - >>>%s<<<\n" RESET, *line);
+				is_nl_or_eof = wipe_buffer(buffer, line, &perst_buf);
 			}
 			free(buffer);
-			return (retwipebuffer);
+			printf("3 - is_nl_or_eof == %d\n", is_nl_or_eof);
+			return (is_nl_or_eof);
 		}
 	}
 	return (-255);
@@ -114,7 +128,7 @@ int main()
 	printf("%d", gnl_ret);
 	printf(GREEN   "||%s||\n"                   RESET , line);
 	free(line);
-
+//return 0;
 	printf(MAGENTA "====================================\n");
 	printf(		   "==========   APPEL DE GNL  =========\n");
 	printf(        "====================================\n" RESET);
@@ -161,13 +175,29 @@ int main()
 	printf("%d", gnl_ret);
 	printf(GREEN   "||%s||\n"                   RESET , line);
 	free(line);
-return 0;
+
 	printf(MAGENTA "====================================\n");
 	printf(		   "==========   APPEL DE GNL  =========\n");
 	printf(        "====================================\n" RESET);
 	gnl_ret = get_next_line(fd, &line);
 	printf("%d", gnl_ret);
 	printf(GREEN   "||%s||\n"                   RESET , line);
-	free(line);free(line);
+	free(line);
+//return 0;		
+	printf(MAGENTA "====================================\n");
+	printf(		   "==========   APPEL DE GNL  =========\n");
+	printf(        "====================================\n" RESET);
+	gnl_ret = get_next_line(fd, &line);
+	printf("%d", gnl_ret);
+	printf(GREEN   "||%s||\n"                   RESET , line);
+	free(line);
+return 0;	
+	printf(MAGENTA "====================================\n");
+	printf(		   "==========   APPEL DE GNL  =========\n");
+	printf(        "====================================\n" RESET);
+	gnl_ret = get_next_line(fd, &line);
+	printf("%d", gnl_ret);
+	printf(GREEN   "||%s||\n"                   RESET , line);
+	free(line);
 	return (0);
 }
