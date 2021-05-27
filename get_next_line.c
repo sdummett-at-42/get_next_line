@@ -6,117 +6,68 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:47:48 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/26 13:43:24 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/27 20:10:49 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "gnl.h"
 
 int get_next_line(int fd, char **line)
 {
-	//static t_buffer *perst_buf = 0;
-	static t_buffer perst_buf;
+	static char *persistant_buffer = NULL;
+	static int last_ret = 0;
+	int error;
+	int is_nl;
+	int read_ret;
+	int is_eof;
 	char *buffer;
-	int is_nl_or_eof;
-	int ret;
-	char *nl;
 
-	perst_buf.persist_buffer = 0;
-	// INIT *line a NULL;
-	*line = 0;
-	ret = -1;
-	is_nl_or_eof = -1;
-
-	if (perst_buf.persist_buffer == 0)
+	*line = NULL;
+	is_nl = 0;
+	is_eof = 0;
+	if (persistant_buffer != NULL)
 	{
-		//// A mettre dans une fonction ? ////
-		buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
-		if (!buffer)
+		is_nl = copy_buffer_in_line(persistant_buffer, line);
+		error = check_buffer(persistant_buffer, &persistant_buffer);
+		if (error == 0)
+		{
+			free(persistant_buffer);
+			persistant_buffer = NULL;
+		}
+	}
+	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (!buffer)
+		return (-1);
+	read_ret = -1;
+	while (is_nl == 0)
+	{
+		ft_memset(buffer, BUFFER_SIZE + 1);
+		read_ret = read(fd, buffer, BUFFER_SIZE);
+		if (read_ret < 0)
 			return (-1);
-		while (is_nl_or_eof == -1)
+		error = check_buffer(buffer, &persistant_buffer);
+		is_nl = copy_buffer_in_line(buffer, line);
+		//printf("is_nl = %d | error = %d\n", is_nl, error);
+		if (read_ret == 0)
 		{
-			if (read_on_fdesc(fd, buffer) == -1)
-				return (-1);
-			is_nl_or_eof = wipe_buffer(buffer, line, &perst_buf);
-			if (*line == 0)
-				break;
-			//	return (-1);
+			if (is_eof != 1)
+			{
+				if (last_ret == 1)
+				{
+					free(buffer);
+					last_ret = 0;
+					return (empty_string(line));
+				}
+				printf("NULL\n");
+				*line = NULL;
+			}
+			break;
 		}
-		free(buffer);
-		//// A mettre dans une fonction ? ////
-		printf("1 - is_nl_or_eof == %d\n", is_nl_or_eof);
-		printf("perst_buf.last_return = %d\n", perst_buf.last_return);
-		if (*line == 0 && perst_buf.last_return == 1)
-		{
-
-			printf("1 - RETURN 0\n");
-			nl = malloc(sizeof(char));
-			if (!nl)
-				return (-1);
-			nl[0] = 0;
-			*line = nl;
-			return (0);
-		}
-		perst_buf.last_return = is_nl_or_eof;
-		return (is_nl_or_eof);
+		is_eof = 1;
 	}
-	else
-	{
-		int perstbuf_len = 0;
-		while (perst_buf.persist_buffer[perstbuf_len])
-			perstbuf_len++;
-		int line_len = -1;
-		int buffer_len = 0;
-		is_nl_or_eof = buffer_is_nl_eof(perst_buf.persist_buffer, &line_len);
-		if (is_nl_or_eof != -1)
-		{
-			perst_buf_copy(&perst_buf, line, line_len, 1);
-			printf("2 - is_nl_or_eof == %d\n", is_nl_or_eof);
-			printf("perst_buf.last_return = %d\n", perst_buf.last_return);
-			if (*line == 0 && perst_buf.last_return == 1)
-			{
-
-				printf("1 - RETURN 0\n");
-				nl = malloc(sizeof(char));
-				if (!nl)
-					return (-1);
-				nl[0] = 0;
-				*line = nl;
-				return (0);
-			}
-			perst_buf.last_return = is_nl_or_eof;
-			return (is_nl_or_eof);
-		}
-		else
-		{
-			perst_buf_copy(&perst_buf, line, perstbuf_len, 0);
-			buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
-			if (!buffer)
-				return (-1);
-			while (is_nl_or_eof == -1)
-			{
-				if (read_on_fdesc(fd, buffer) == -1)
-					return (-1);
-				is_nl_or_eof = wipe_buffer(buffer, line, &perst_buf);
-			}
-			free(buffer);
-			printf("3 - is_nl_or_eof == %d\n", is_nl_or_eof);
-			printf("perst_buf.last_return = %d\n", perst_buf.last_return);
-			if (*line == 0 && perst_buf.last_return == 1)
-			{
-				printf("1 - RETURN 0\n");
-				nl = malloc(sizeof(char));
-				if (!nl)
-					return (-1);
-				nl[0] = 0;
-				*line = nl;
-				return (0);
-			}
-			perst_buf.last_return = is_nl_or_eof;
-			return (is_nl_or_eof);
-		}
-	}
-	return (-255);
+	last_ret = is_nl;
+	free(buffer);
+	return (is_nl); // return ?
 }
 
 void print_gnl_result(char **line, int fd)
@@ -130,34 +81,30 @@ void print_gnl_result(char **line, int fd)
 	printf("%d", gnl_ret);
 	printf(GREEN   "||%s||\n"                   RESET , *line);
 	free(*line);
-
 }
 
 int main()
 {
-	int fd = open("loremipsum", O_RDONLY);
+	int i;
+	int fd;
+	int ret_read;
 	char *line;
-	int gnl_ret;
+	char *buffer;
 
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
+	fd = open("lorem2", O_RDONLY);
 	print_gnl_result(&line, fd);
 	print_gnl_result(&line, fd);
 	//return 0;
 	print_gnl_result(&line, fd);
-	return 0 ;
 	print_gnl_result(&line, fd);
 	print_gnl_result(&line, fd);
 	print_gnl_result(&line, fd);
-	return 0;
-
-	//return 0;
-
+	print_gnl_result(&line, fd);
+	print_gnl_result(&line, fd);
+	print_gnl_result(&line, fd);
+	print_gnl_result(&line, fd);
+	print_gnl_result(&line, fd);
+	print_gnl_result(&line, fd);
+	print_gnl_result(&line, fd);
+	print_gnl_result(&line, fd);
 }

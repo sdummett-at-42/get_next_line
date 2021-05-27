@@ -6,17 +6,12 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:48:16 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/26 12:45:27 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/27 20:10:54 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 //TEMPORARY INCLUDES
 #include <stdio.h>
-
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 3
-#endif
-void print_buffer(char *buffer);
 
 #define RED     "\x1b[31m"
 #define GREEN   "\x1b[32m"
@@ -28,21 +23,15 @@ void print_buffer(char *buffer);
 
 //MANDATORY PROJECTS INCLUDES
 
-#include <fcntl.h> 		// open
-#include <stdlib.h> 	// malloc, free
-#include <sys/types.h>	// read
-#include <sys/uio.h>	// //
-#include <unistd.h> 	// //
+#include <fcntl.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/uio.h>
+#include <unistd.h>
 
-typedef struct s_buffer
-{
-	int last_return; // 1 = YES | 0 = NO
-	char *persist_buffer;
-}				t_buffer;
 
 int buffer_len(char *buffer);
-int check_nl_eof(char *bytes, int *ret);
-int read_on_fdesc(int fd, char *buffer);
-int buffer_is_nl_eof(char *buffer, int *line_len);
-int wipe_buffer(char *buffer, char **line_found, t_buffer *perst_buf);
-void perst_buf_copy(t_buffer *perst_buffer, char **line, int line_len, int signal);
+void ft_memset(void *buffer, int size);
+int copy_buffer_in_line(char *buffer, char **line);
+int check_buffer(char *buffer, char **new_buffer);
+int empty_string(char **line);
