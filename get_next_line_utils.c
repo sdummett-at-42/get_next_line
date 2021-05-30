@@ -6,15 +6,15 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:48:01 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/27 20:10:52 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/30 12:58:31 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "gnl.h"
+#include "get_next_line.h"
 
-void ft_memset(void *buffer, int size)
+void	ft_memset(void *buffer, int size)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < size)
@@ -24,9 +24,9 @@ void ft_memset(void *buffer, int size)
 	}
 }
 
-int buffer_len(char *buffer)
+int	buffer_len(char *buffer)
 {
-	int len;
+	int	len;
 
 	len = 0;
 	while (buffer[len])
@@ -34,12 +34,12 @@ int buffer_len(char *buffer)
 	return (len);
 }
 
-int copy_buffer_in_line(char *buffer, char **line)
+int	copy_buffer_in_line(char *buffer, char **line)
 {
-	int i;
-	int j;
-	char *line_tmp;
-	char *new_line;
+	int		i;
+	int		j;
+	char	*line_tmp;
+	char	*new_line;
 
 	i = 0;
 	line_tmp = *line;
@@ -64,7 +64,6 @@ int copy_buffer_in_line(char *buffer, char **line)
 			return (-1);
 		ft_memset(new_line, buffer_len(buffer) + 1);
 	}
-
 	j = 0;
 	while (buffer[j] != '\0' && buffer[j] != '\n')
 	{
@@ -79,13 +78,13 @@ int copy_buffer_in_line(char *buffer, char **line)
 	return (0);
 }
 
-int check_buffer(char *buffer, char **new_buffer)
+int	check_buffer(char *buffer, char **new_buffer)
 {
-	int i;
-	int buf_len;
-	char *tmp;
-	buf_len = buffer_len(buffer);
+	int		i;
+	int		buf_len;
+	char	*tmp;
 
+	buf_len = buffer_len(buffer);
 	tmp = *new_buffer;
 	i = 0;
 	while (buffer[i])
@@ -118,9 +117,9 @@ int check_buffer(char *buffer, char **new_buffer)
 	return (-1);
 }
 
-int empty_string(char **line)
+int	empty_string(char **line)
 {
-	char *new_line;
+	char	*new_line;
 
 	new_line = malloc(sizeof(char) * 1);
 	if (!new_line)

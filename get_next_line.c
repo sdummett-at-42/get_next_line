@@ -6,21 +6,21 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 14:47:48 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/27 20:10:49 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/30 12:58:30 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "gnl.h"
+#include "get_next_line.h"
 
-int get_next_line(int fd, char **line)
+int	get_next_line(int fd, char **line)
 {
-	static char *persistant_buffer = NULL;
-	static int last_ret = 0;
-	int error;
-	int is_nl;
-	int read_ret;
-	int is_eof;
-	char *buffer;
+	static char	*persistant_buffer = NULL;
+	static int	last_ret = 0;
+	int			error;
+	int			is_nl;
+	int			read_ret;
+	int			is_eof;
+	char		*buffer;
 
 	*line = NULL;
 	is_nl = 0;
@@ -47,7 +47,6 @@ int get_next_line(int fd, char **line)
 			return (-1);
 		error = check_buffer(buffer, &persistant_buffer);
 		is_nl = copy_buffer_in_line(buffer, line);
-		//printf("is_nl = %d | error = %d\n", is_nl, error);
 		if (read_ret == 0)
 		{
 			if (is_eof != 1)
@@ -61,7 +60,7 @@ int get_next_line(int fd, char **line)
 				printf("NULL\n");
 				*line = NULL;
 			}
-			break;
+			break ;
 		}
 		is_eof = 1;
 	}
@@ -70,6 +69,7 @@ int get_next_line(int fd, char **line)
 	return (is_nl); // return ?
 }
 
+/*
 void print_gnl_result(char **line, int fd)
 {
 	int gnl_ret;
@@ -108,3 +108,4 @@ int main()
 	print_gnl_result(&line, fd);
 	print_gnl_result(&line, fd);
 }
+*/
