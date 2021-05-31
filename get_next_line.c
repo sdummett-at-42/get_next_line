@@ -6,11 +6,48 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/31 17:49:27 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/31 18:27:26 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+int	copy_buffer_in_line(char *buffer, char **line)
+{
+	int		i;
+	int		nl;
+	int		offset;
+	char	*tmp;
+
+	nl = 0;
+	if (*line == NULL)
+		offset = ft_strlen_nl(buffer, 1);
+	else
+		offset = ft_strlen_nl(*line, 1) + ft_strlen_nl(buffer, 1);
+	tmp = (char *)malloc(sizeof(char) * (offset + 1));
+	if (!tmp)
+		return (-1);
+	offset = 0;
+	if (*line != NULL)
+	{
+		ft_strcpy(tmp, *line);
+		while (tmp[offset] != '\0')
+			offset++;
+		free(*line);
+	}
+	i = 0;
+	while (buffer[i] != '\n' && buffer[i] != '\0')
+	{
+		tmp[offset] = buffer[i];
+		offset++;
+		i++;
+	}
+	tmp[offset] = '\0';
+	if (buffer[i] == '\n')
+		nl = 1;
+	*line = tmp;
+	return (nl);
+}
 
 int get_next_line(int fd, char **line)
 {
@@ -30,12 +67,9 @@ int get_next_line(int fd, char **line)
 		}
 		free(buffer);
 	}
-	//else
-	//{
 		buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 		if (!buffer)
 			return (-1);
-	//}
 	eof = 1;
 	while (1)
 	{
@@ -43,7 +77,7 @@ int get_next_line(int fd, char **line)
 		tmp_ret = read(fd, buffer, BUFFER_SIZE);
 		if (tmp_ret == 0)
 		{
-			if (tmp_ret == 0 && *line == NULL) //&& ft_strlen_nl(buffer, 1) != 0)
+			if (tmp_ret == 0 && *line == NULL)
 			{
 				free(buffer);
 				buffer = NULL;
@@ -62,13 +96,9 @@ int get_next_line(int fd, char **line)
 	}
 	buffer = save_buffer(buffer, ft_strchr(buffer, '\n') + 1);
 	if (*line)
-	{	
-	return (1);
-	}
+		return (1);
 	else
-	{
 		return (0);
-	}
 }
 /*
 void print_gnl_result(char **line, int fd)
