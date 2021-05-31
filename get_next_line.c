@@ -5,70 +5,71 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/21 14:47:48 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/30 12:58:30 by sdummett         ###   ########.fr       */
+/*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
+/*   Updated: 2021/05/31 17:49:27 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	get_next_line(int fd, char **line)
+int get_next_line(int fd, char **line)
 {
-	static char	*persistant_buffer = NULL;
-	static int	last_ret = 0;
-	int			error;
-	int			is_nl;
-	int			read_ret;
-	int			is_eof;
-	char		*buffer;
+	int tmp_ret;
+	int eof;
+	static char *buffer = NULL;
 
 	*line = NULL;
-	is_nl = 0;
-	is_eof = 0;
-	if (persistant_buffer != NULL)
-	{
-		is_nl = copy_buffer_in_line(persistant_buffer, line);
-		error = check_buffer(persistant_buffer, &persistant_buffer);
-		if (error == 0)
-		{
-			free(persistant_buffer);
-			persistant_buffer = NULL;
-		}
-	}
-	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
-	if (!buffer)
+	if (fd < 0 || !line)
 		return (-1);
-	read_ret = -1;
-	while (is_nl == 0)
+	if (buffer != NULL)
 	{
-		ft_memset(buffer, BUFFER_SIZE + 1);
-		read_ret = read(fd, buffer, BUFFER_SIZE);
-		if (read_ret < 0)
-			return (-1);
-		error = check_buffer(buffer, &persistant_buffer);
-		is_nl = copy_buffer_in_line(buffer, line);
-		if (read_ret == 0)
+		if (copy_buffer_in_line(buffer, line))
 		{
-			if (is_eof != 1)
-			{
-				if (last_ret == 1)
-				{
-					free(buffer);
-					last_ret = 0;
-					return (empty_string(line));
-				}
-				printf("NULL\n");
-				*line = NULL;
-			}
-			break ;
+			buffer = save_buffer(buffer, ft_strchr(buffer, '\n') + 1);
+			return (1);
 		}
-		is_eof = 1;
+		free(buffer);
 	}
-	last_ret = is_nl;
-	free(buffer);
-	return (is_nl); // return ?
+	//else
+	//{
+		buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+		if (!buffer)
+			return (-1);
+	//}
+	eof = 1;
+	while (1)
+	{
+		ft_memset(buffer, 0, BUFFER_SIZE + 1);
+		tmp_ret = read(fd, buffer, BUFFER_SIZE);
+		if (tmp_ret == 0)
+		{
+			if (tmp_ret == 0 && *line == NULL) //&& ft_strlen_nl(buffer, 1) != 0)
+			{
+				free(buffer);
+				buffer = NULL;
+				return (0);
+			}
+			else
+			{
+				copy_buffer_in_line(buffer, line);
+				free(buffer);
+				buffer = NULL;
+				return (1);
+			}
+		}
+		if (copy_buffer_in_line(buffer, line))
+			break;
+	}
+	buffer = save_buffer(buffer, ft_strchr(buffer, '\n') + 1);
+	if (*line)
+	{	
+	return (1);
+	}
+	else
+	{
+		return (0);
+	}
 }
-
 /*
 void print_gnl_result(char **line, int fd)
 {
@@ -85,16 +86,11 @@ void print_gnl_result(char **line, int fd)
 
 int main()
 {
-	int i;
 	int fd;
-	int ret_read;
+	int ret;
 	char *line;
-	char *buffer;
 
-	fd = open("lorem2", O_RDONLY);
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
-	//return 0;
+	fd = open("file4", O_RDONLY);
 	print_gnl_result(&line, fd);
 	print_gnl_result(&line, fd);
 	print_gnl_result(&line, fd);
@@ -105,7 +101,6 @@ int main()
 	print_gnl_result(&line, fd);
 	print_gnl_result(&line, fd);
 	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
+	return 0;
 }
 */

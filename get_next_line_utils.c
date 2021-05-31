@@ -5,126 +5,120 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/21 14:48:01 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/30 12:58:31 by sdummett         ###   ########.fr       */
+/*   Created: 2021/05/31 12:03:40 by sdummett          #+#    #+#             */
+/*   Updated: 2021/05/31 17:49:31 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	ft_memset(void *buffer, int size)
+char	*ft_strchr(const char *str, int ch)
 {
-	int	i;
-
-	i = 0;
-	while (i < size)
+	while (*str)
 	{
-		*((unsigned char *)buffer + i) = 0;
-		i++;
+		if (*str == (unsigned char)ch)
+			return ((char *)str);
+		str++;
 	}
+	if (*str == (unsigned char)ch)
+		return ((char *)str);
+	return (0);
 }
 
-int	buffer_len(char *buffer)
+void	*ft_memset(void *s, int c, size_t n)
 {
-	int	len;
+	while (n)
+	{
+		*((unsigned char *)s + n - 1) = (unsigned char)c;
+		n--;
+	}
+	return (s);
+}
+
+int		ft_strlen_nl(char *buffer, int choice)
+{
+	int len;
 
 	len = 0;
-	while (buffer[len])
-		len++;
+	if (choice == 1)
+	{
+		while (buffer[len] != '\n' && buffer[len] != '\0')
+			len++;
+	}
+	else if (choice == 2)
+	{
+		while (buffer[len] != '\0')
+			len++;
+	}
 	return (len);
 }
 
-int	copy_buffer_in_line(char *buffer, char **line)
+char	*ft_strcpy(char *dest, char *src)
 {
-	int		i;
-	int		j;
-	char	*line_tmp;
-	char	*new_line;
+	int i;
 
 	i = 0;
-	line_tmp = *line;
-	if (line_tmp)
+	while (src[i] != '\0')
 	{
-		while (line_tmp[i] != '\0')
-			i++;
-		new_line = malloc(sizeof(char) * i + buffer_len(buffer) + 1);
-		if (!new_line)
-			return (-1);
-		i = 0;
-		while (line_tmp[i] != '\0')
-		{
-			new_line[i] = line_tmp[i];
-			i++;
-		}
-	}
-	else
-	{
-		new_line = malloc(sizeof(char) * buffer_len(buffer) + 1);
-		if (!new_line)
-			return (-1);
-		ft_memset(new_line, buffer_len(buffer) + 1);
-	}
-	j = 0;
-	while (buffer[j] != '\0' && buffer[j] != '\n')
-	{
-		new_line[i] = buffer[j];
+		dest[i] = src[i];
 		i++;
-		j++;
 	}
-	new_line[i] = 0;
-	*line = new_line;
-	if (buffer[j] == '\n')
-		return (1);
-	return (0);
+	dest[i] = '\0';
+	return (dest);
 }
 
-int	check_buffer(char *buffer, char **new_buffer)
+char	*save_buffer(char *ptr, char *buffer)
 {
 	int		i;
-	int		buf_len;
 	char	*tmp;
 
-	buf_len = buffer_len(buffer);
-	tmp = *new_buffer;
+	tmp = (char *)malloc(sizeof(char) * ft_strlen_nl(buffer, 2));
+	if (!tmp)
+		return (NULL);
 	i = 0;
-	while (buffer[i])
+	while (buffer[i] != '\0')
 	{
-		if (buffer[i] == '\n')
-		{
-			if (i + 1 == buf_len)
-				return (0);
-			else
-			{
-				tmp = malloc(sizeof(char) * buf_len - i + 1);
-				if (!tmp)
-					return (-1);
-				buf_len = 0;
-				i++;
-				while (buffer[i])
-				{
-					tmp[buf_len] = buffer[i];
-					buffer[i] = 0;
-					buf_len++;
-					i++;
-				}
-				tmp[buf_len] = 0;
-				*new_buffer = tmp;
-				return (1);
-			}
-		}
+		tmp[i] = buffer[i];
 		i++;
 	}
-	return (-1);
+	tmp[i] = '\0';
+	free(ptr);
+	return (tmp);
 }
 
-int	empty_string(char **line)
+int		copy_buffer_in_line(char *buffer, char **line)
 {
-	char	*new_line;
+	int i;
+	int nl;
+	int offset;
+	char *tmp;
 
-	new_line = malloc(sizeof(char) * 1);
-	if (!new_line)
+	nl = 0;
+	if (*line == NULL)
+		offset = ft_strlen_nl(buffer, 1);
+	else
+		offset = ft_strlen_nl(buffer, 1) + ft_strlen_nl(buffer, 1);
+	tmp = (char *)malloc(sizeof(char) * offset + 1 + 10000);	
+	if (!tmp)
 		return (-1);
-	new_line[0] = '\0';
-	*line = new_line;
-	return (0);
+	offset = 0;
+	if (*line != NULL)
+	{
+		ft_strcpy(tmp, *line);
+		while (tmp[offset] != '\0')
+			offset++;
+		free(*line);
+	}
+	i = 0;
+	while (buffer[i] != '\n' && buffer[i] != '\0')
+	{
+		tmp[offset] = buffer[i];
+		offset++;
+		i++;
+	}
+	tmp[offset] = '\0';
+	if (buffer[i] == '\n')
+		nl = 1;
+	*line = tmp;
+	return (nl);
 }

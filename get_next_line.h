@@ -5,17 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/21 14:48:16 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/30 12:58:27 by sdummett         ###   ########.fr       */
+/*   Created: 2021/05/31 12:03:49 by sdummett          #+#    #+#             */
+/*   Updated: 2021/05/31 14:24:41 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////// TEMPORARY INCLUDES /////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////
-//     TEMPORARY INCLUDES       //
-//////////////////////////////////
 # include <stdio.h>
 
 # define RED     "\x1b[31m"
@@ -26,19 +24,20 @@
 # define CYAN    "\x1b[36m"
 # define RESET   "\x1b[0m"
 
-//////////////////////////////////
-// MANDATORY PROJECTS INCLUDES  //
-//////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////// MANDATORY INCLUDES /////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
 # include <fcntl.h>
 # include <stdlib.h>
 # include <sys/types.h>
 # include <sys/uio.h>
 # include <unistd.h>
-void	ft_memset(void *buffer, int size);
-int		buffer_len(char *buffer);
-int		copy_buffer_in_line(char *buffer, char **line);
-int		check_buffer(char *buffer, char **new_buffer);
-int		empty_string(char **line);
-int		get_next_line(int fd, char **line);
 
-#endif
+int 	get_next_line(int fd, char **line);
+void	*ft_memset(void *s, int c, size_t n);
+int		copy_buffer_in_line(char *buffer, char **line);
+char 	*ft_strcpy(char *dest, char *src);
+char	*ft_strchr(const char *str, int ch);
+char	*save_buffer(char *ptr, char *buffer);
+int		ft_strlen_nl(char *buffer, int choice);
