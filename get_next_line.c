@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/31 19:34:42 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/31 20:21:36 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	get_next_line(int fd, char **line)
 	static char	*buffer = NULL;
 
 	*line = NULL;
-	if (fd < 0 || !line)
+	if (fd < 0) || !line || BUFFER_SIZE < 1)
 		return (-1);
 	if (buffer != NULL)
 	{
@@ -69,7 +69,6 @@ int	get_next_line(int fd, char **line)
 	}
 	buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buffer)
-		*/
 		return (-1);
 	eof = 1;
 	while (1)
