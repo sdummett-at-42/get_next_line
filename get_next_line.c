@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/31 18:27:26 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/31 19:34:42 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,11 @@ int	copy_buffer_in_line(char *buffer, char **line)
 	return (nl);
 }
 
-int get_next_line(int fd, char **line)
+int	get_next_line(int fd, char **line)
 {
-	int tmp_ret;
-	int eof;
-	static char *buffer = NULL;
+	int			tmp_ret;
+	int			eof;
+	static char	*buffer = NULL;
 
 	*line = NULL;
 	if (fd < 0 || !line)
@@ -67,32 +67,39 @@ int get_next_line(int fd, char **line)
 		}
 		free(buffer);
 	}
-		buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
-		if (!buffer)
-			return (-1);
+	buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (!buffer)
+		*/
+		return (-1);
 	eof = 1;
 	while (1)
 	{
 		ft_memset(buffer, 0, BUFFER_SIZE + 1);
 		tmp_ret = read(fd, buffer, BUFFER_SIZE);
+		if (tmp_ret == -1)
+		{
+			free(buffer);
+			return (-1);
+		}
 		if (tmp_ret == 0)
 		{
-			if (tmp_ret == 0 && *line == NULL)
-			{
-				free(buffer);
-				buffer = NULL;
-				return (0);
-			}
+			if (tmp_ret == 0 && *line == NULL && eof != 1)
+				tmp_ret = 0;
 			else
 			{
+
 				copy_buffer_in_line(buffer, line);
-				free(buffer);
-				buffer = NULL;
-				return (1);
+				tmp_ret = 1;
+				if (eof == 1)
+					tmp_ret = 0;
 			}
+			free(buffer);
+			buffer = NULL;
+			return (tmp_ret);
 		}
 		if (copy_buffer_in_line(buffer, line))
-			break;
+			break ;
+		eof = 0;
 	}
 	buffer = save_buffer(buffer, ft_strchr(buffer, '\n') + 1);
 	if (*line)
@@ -120,7 +127,7 @@ int main()
 	int ret;
 	char *line;
 
-	fd = open("file4", O_RDONLY);
+	fd = open("file5", O_RDONLY);
 	print_gnl_result(&line, fd);
 	print_gnl_result(&line, fd);
 	print_gnl_result(&line, fd);

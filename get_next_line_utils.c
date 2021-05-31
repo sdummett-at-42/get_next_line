@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:03:40 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/31 18:27:41 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/05/31 19:34:40 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ char	*save_buffer(char *ptr, char *buffer)
 	tmp = (char *)malloc(sizeof(char) * (ft_strlen_nl(buffer, 2) + 1));
 	if (!tmp)
 		return (NULL);
+	ft_memset(tmp, 0, ft_strlen_nl(buffer, 2) + 1);
 	i = 0;
 	while (buffer[i] != '\0')
 	{
