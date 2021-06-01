@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/31 20:21:36 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/01 04:16:51 by stone            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	get_next_line(int fd, char **line)
 	static char	*buffer = NULL;
 
 	*line = NULL;
-	if (fd < 0) || !line || BUFFER_SIZE < 1)
+	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
 	if (buffer != NULL)
 	{
@@ -78,20 +78,29 @@ int	get_next_line(int fd, char **line)
 		if (tmp_ret == -1)
 		{
 			free(buffer);
+			buffer = NULL;
 			return (-1);
 		}
 		if (tmp_ret == 0)
 		{
-			if (tmp_ret == 0 && *line == NULL && eof != 1)
-				tmp_ret = 0;
-			else
-			{
+			//if (*line == NULL && eof != 1)
+			//{
+			//	tmp_ret = 0;
+			//}
+		//	else
+		//	{
 
-				copy_buffer_in_line(buffer, line);
-				tmp_ret = 1;
 				if (eof == 1)
-					tmp_ret = 0;
-			}
+				{
+				copy_buffer_in_line(buffer, line);
+					free(buffer);
+					buffer = NULL;
+					return (0);
+				}
+				//copy_buffer_in_line(buffer, line);
+				//tmp_ret = 1;
+				//	tmp_ret = 0;
+		//	}
 			free(buffer);
 			buffer = NULL;
 			return (tmp_ret);
@@ -106,6 +115,7 @@ int	get_next_line(int fd, char **line)
 	else
 		return (0);
 }
+
 /*
 void print_gnl_result(char **line, int fd)
 {
