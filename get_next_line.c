@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/01 04:16:51 by stone            ###   ########.fr       */
+/*   Updated: 2021/06/01 04:35:00 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,9 @@ int	get_next_line(int fd, char **line)
 	int			eof;
 	static char	*buffer = NULL;
 
-	*line = NULL;
 	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
+	*line = NULL;
 	if (buffer != NULL)
 	{
 		if (copy_buffer_in_line(buffer, line))
