@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/03 18:47:28 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/03 19:19:52 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int	buffer_handler(char **buffer, char **line, int fd, int eof)
 	return (0);
 }
 
-char	*new_elem(t_fd_data **fd_data)
+char	*new_elem(t_fd_data **fd_data, int fd)
 {
 	t_fd_data *elem;
 
@@ -112,17 +112,16 @@ char	*new_elem(t_fd_data **fd_data)
 char	*fd_handler(t_fd_data **fd_data, int fd)
 {
 	t_fd_data *curr;
-	t_fd_data *elem;
 
-	if (fd_data == NULL)
-		return (new_elem(fd_data));
+	if (*fd_data == NULL)
+		return (new_elem(fd_data, fd));
 	else
 	{
 		curr = *fd_data;
 		while (curr->fd != fd && curr->next != NULL)
 			curr = curr->next;
 		if (curr->fd != fd)
-			return (new_elem(fd_data));
+			return (new_elem(fd_data, fd));
 		else
 			return (curr->buffer);
 	}
