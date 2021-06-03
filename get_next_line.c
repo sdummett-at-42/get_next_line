@@ -6,26 +6,36 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/03 12:09:26 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/03 14:21:09 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	copy_buffer_in_line_bis(char *buffer, char *tmp, int offset)
+int	copy_buffer_in_line_bis(char **buffer, char *tmp, int offset, int choice)
 {
 	int	i;
 
-	i = 0;
-	while (buffer[i] != '\n' && buffer[i] != '\0')
+	if (choice == 1)
 	{
-		tmp[offset] = buffer[i];
+	i = 0;
+	while ((*buffer)[i] != '\n' && (*buffer)[i] != '\0')
+	{
+		tmp[offset] = (*buffer)[i];
 		offset++;
 		i++;
 	}
 	tmp[offset] = '\0';
-	if (buffer[i] == '\n')
+	if ((*buffer)[i] == '\n')
 		return (1);
+	return (0);
+	}
+	if (choice == 2)
+	{
+		free(*buffer);
+		*buffer = NULL;
+		return (offset);
+	}
 	return (0);
 }
 
@@ -52,7 +62,7 @@ int	copy_buffer_in_line(char *buffer, char **line)
 			offset++;
 		free(*line);
 	}
-	if (copy_buffer_in_line_bis(buffer, tmp, offset) == 1)
+	if (copy_buffer_in_line_bis(&buffer, tmp, offset, 1) == 1)
 		nl = 1;
 	*line = tmp;
 	return (nl);
@@ -87,22 +97,16 @@ int	get_next_line(int fd, char **line)
 		tmp_ret = read(fd, buffer, BUFFER_SIZE);
 		if (tmp_ret == -1)
 		{
-			free(buffer);
-			buffer = NULL;
-			return (-1);
+			return (copy_buffer_in_line_bis(&buffer, NULL, -1, 2));
 		}
 		if (tmp_ret == 0)
 		{
 			if (eof == 1)
 			{
 				copy_buffer_in_line(buffer, line);
-				free(buffer);
-				buffer = NULL;
-				return (0);
+				return (copy_buffer_in_line_bis(&buffer, NULL, 0, 2));
 			}
-			free(buffer);
-			buffer = NULL;
-			return (tmp_ret);
+			return (copy_buffer_in_line_bis(&buffer, NULL, 0, 2));
 		}
 		if (copy_buffer_in_line(buffer, line))
 			break ;

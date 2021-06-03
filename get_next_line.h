@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:03:49 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/03 12:08:25 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/03 14:16:38 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int		copy_buffer_in_line(char *buffer, char **line);
 char	*ft_strchr_and_memset(const char *str, int ch, size_t n, int choice);
 char	*save_buffer(char *ptr, char *buffer);
 int		ft_strlen_nl_and_strcpy(char *buffer, char *src, int choice);
-int		copy_buffer_in_line_bis(char *buffer, char *tmp, int offset);
+int		copy_buffer_in_line_bis(char **buffer, char *tmp, int offset, int choice);
 int		get_next_line_bis(char *buffer, char **line, int fd);
-
+int		free_and_null_it(char **buffer, int ret);
 #endif
