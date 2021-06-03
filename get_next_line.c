@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/03 11:42:40 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/03 12:09:26 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ int	get_next_line(int fd, char **line)
 	{
 		if (copy_buffer_in_line(buffer, line))
 		{
-			buffer = save_buffer(buffer, ft_strchr(buffer, '\n') + 1);
+			buffer = save_buffer(buffer, ft_strchr_and_memset(buffer, '\n', \
+						0, 1) + 1);
 			return (1);
 		}
 		free(buffer);
@@ -82,7 +83,7 @@ int	get_next_line(int fd, char **line)
 	eof = 1;
 	while (1)
 	{
-		ft_memset(buffer, 0, BUFFER_SIZE + 1);
+		ft_strchr_and_memset(buffer, 0, BUFFER_SIZE + 1, 2);
 		tmp_ret = read(fd, buffer, BUFFER_SIZE);
 		if (tmp_ret == -1)
 		{
@@ -107,7 +108,7 @@ int	get_next_line(int fd, char **line)
 			break ;
 		eof = 0;
 	}
-	buffer = save_buffer(buffer, ft_strchr(buffer, '\n') + 1);
+	buffer = save_buffer(buffer, ft_strchr_and_memset(buffer, '\n', 0, 1) + 1);
 	if (*line)
 		return (1);
 	else

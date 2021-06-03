@@ -6,33 +6,36 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:03:40 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/03 11:41:03 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/03 12:04:13 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strchr(const char *str, int ch)
+char	*ft_strchr_and_memset(const char *str, int ch, size_t n, int choice)
 {
-	while (*str)
+	if (choice == 1)
 	{
+		while (*str)
+		{
+			if (*str == (unsigned char)ch)
+				return ((char *)str);
+			str++;
+		}
 		if (*str == (unsigned char)ch)
 			return ((char *)str);
-		str++;
+		return (0);
 	}
-	if (*str == (unsigned char)ch)
-		return ((char *)str);
-	return (0);
-}
-
-void	*ft_memset(void *s, int c, size_t n)
-{
-	while (n)
+	if (choice == 2)
 	{
-		*((unsigned char *)s + n - 1) = (unsigned char)c;
-		n--;
+		while (n)
+		{
+			*((unsigned char *)str + n - 1) = (unsigned char)ch;
+			n--;
+		}
+		return ((char *)str);
 	}
-	return (s);
+	return (0);
 }
 
 int	ft_strlen_nl_and_strcpy(char *buffer, char *src, int choice)
@@ -69,10 +72,11 @@ char	*save_buffer(char *ptr, char *buffer)
 	char	*tmp;
 
 	tmp = (char *)malloc(sizeof(char) * (ft_strlen_nl_and_strcpy(buffer \
-	, NULL, 2) + 1));
+					, NULL, 2) + 1));
 	if (!tmp)
 		return (NULL);
-	ft_memset(tmp, 0, ft_strlen_nl_and_strcpy(buffer, NULL, 2) + 1);
+	ft_strchr_and_memset(tmp, 0, ft_strlen_nl_and_strcpy(buffer, NULL, 2) \
+			+ 1, 2);
 	i = 0;
 	while (buffer[i] != '\0')
 	{
