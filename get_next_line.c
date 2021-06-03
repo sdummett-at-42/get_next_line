@@ -6,35 +6,16 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/01 04:35:00 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/03 11:42:40 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	copy_buffer_in_line(char *buffer, char **line)
+int	copy_buffer_in_line_bis(char *buffer, char *tmp, int offset)
 {
-	int		i;
-	int		nl;
-	int		offset;
-	char	*tmp;
+	int	i;
 
-	nl = 0;
-	if (*line == NULL)
-		offset = ft_strlen_nl(buffer, 1);
-	else
-		offset = ft_strlen_nl(*line, 1) + ft_strlen_nl(buffer, 1);
-	tmp = (char *)malloc(sizeof(char) * (offset + 1));
-	if (!tmp)
-		return (-1);
-	offset = 0;
-	if (*line != NULL)
-	{
-		ft_strcpy(tmp, *line);
-		while (tmp[offset] != '\0')
-			offset++;
-		free(*line);
-	}
 	i = 0;
 	while (buffer[i] != '\n' && buffer[i] != '\0')
 	{
@@ -44,6 +25,34 @@ int	copy_buffer_in_line(char *buffer, char **line)
 	}
 	tmp[offset] = '\0';
 	if (buffer[i] == '\n')
+		return (1);
+	return (0);
+}
+
+int	copy_buffer_in_line(char *buffer, char **line)
+{
+	int		nl;
+	int		offset;
+	char	*tmp;
+
+	nl = 0;
+	if (*line == NULL)
+		offset = ft_strlen_nl_and_strcpy(buffer, NULL, 1);
+	else
+		offset = ft_strlen_nl_and_strcpy(*line, NULL, 1) + \
+		ft_strlen_nl_and_strcpy(buffer, NULL, 1);
+	tmp = (char *)malloc(sizeof(char) * (offset + 1));
+	if (!tmp)
+		return (-1);
+	offset = 0;
+	if (*line != NULL)
+	{
+		ft_strlen_nl_and_strcpy(tmp, *line, 3);
+		while (tmp[offset] != '\0')
+			offset++;
+		free(*line);
+	}
+	if (copy_buffer_in_line_bis(buffer, tmp, offset) == 1)
 		nl = 1;
 	*line = tmp;
 	return (nl);
@@ -83,24 +92,13 @@ int	get_next_line(int fd, char **line)
 		}
 		if (tmp_ret == 0)
 		{
-			//if (*line == NULL && eof != 1)
-			//{
-			//	tmp_ret = 0;
-			//}
-		//	else
-		//	{
-
-				if (eof == 1)
-				{
+			if (eof == 1)
+			{
 				copy_buffer_in_line(buffer, line);
-					free(buffer);
-					buffer = NULL;
-					return (0);
-				}
-				//copy_buffer_in_line(buffer, line);
-				//tmp_ret = 1;
-				//	tmp_ret = 0;
-		//	}
+				free(buffer);
+				buffer = NULL;
+				return (0);
+			}
 			free(buffer);
 			buffer = NULL;
 			return (tmp_ret);
@@ -115,38 +113,3 @@ int	get_next_line(int fd, char **line)
 	else
 		return (0);
 }
-
-/*
-void print_gnl_result(char **line, int fd)
-{
-	int gnl_ret;
-
-	printf(MAGENTA "====================================\n");
-	printf(		   "==========   APPEL DE GNL  =========\n");
-	printf(        "====================================\n" RESET);
-	gnl_ret = get_next_line(fd, line);
-	printf("%d", gnl_ret);
-	printf(GREEN   "||%s||\n"                   RESET , *line);
-	free(*line);
-}
-
-int main()
-{
-	int fd;
-	int ret;
-	char *line;
-
-	fd = open("file5", O_RDONLY);
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
-	print_gnl_result(&line, fd);
-	return 0;
-}
-*/

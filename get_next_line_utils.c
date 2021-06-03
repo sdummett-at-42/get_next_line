@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:03:40 by sdummett          #+#    #+#             */
-/*   Updated: 2021/05/31 20:12:35 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/03 11:41:03 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	*ft_memset(void *s, int c, size_t n)
 	return (s);
 }
 
-int	ft_strlen_nl(char *buffer, int choice)
+int	ft_strlen_nl_and_strcpy(char *buffer, char *src, int choice)
 {
 	int	len;
 
@@ -50,21 +50,17 @@ int	ft_strlen_nl(char *buffer, int choice)
 		while (buffer[len] != '\0')
 			len++;
 	}
-	return (len);
-}
-
-char	*ft_strcpy(char *dest, char *src)
-{
-	int	i;
-
-	i = 0;
-	while (src[i] != '\0')
+	else if (choice == 3)
 	{
-		dest[i] = src[i];
-		i++;
+		while (src[len] != '\0')
+		{
+			buffer[len] = src[len];
+			len++;
+		}
+		buffer[len] = '\0';
+		return (0);
 	}
-	dest[i] = '\0';
-	return (dest);
+	return (len);
 }
 
 char	*save_buffer(char *ptr, char *buffer)
@@ -72,10 +68,11 @@ char	*save_buffer(char *ptr, char *buffer)
 	int		i;
 	char	*tmp;
 
-	tmp = (char *)malloc(sizeof(char) * (ft_strlen_nl(buffer, 2) + 1));
+	tmp = (char *)malloc(sizeof(char) * (ft_strlen_nl_and_strcpy(buffer \
+	, NULL, 2) + 1));
 	if (!tmp)
 		return (NULL);
-	ft_memset(tmp, 0, ft_strlen_nl(buffer, 2) + 1);
+	ft_memset(tmp, 0, ft_strlen_nl_and_strcpy(buffer, NULL, 2) + 1);
 	i = 0;
 	while (buffer[i] != '\0')
 	{
