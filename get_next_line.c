@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/03 14:21:09 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/03 14:54:40 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,17 @@ int	copy_buffer_in_line_bis(char **buffer, char *tmp, int offset, int choice)
 
 	if (choice == 1)
 	{
-	i = 0;
-	while ((*buffer)[i] != '\n' && (*buffer)[i] != '\0')
-	{
-		tmp[offset] = (*buffer)[i];
-		offset++;
-		i++;
-	}
-	tmp[offset] = '\0';
-	if ((*buffer)[i] == '\n')
-		return (1);
-	return (0);
+		i = 0;
+		while ((*buffer)[i] != '\n' && (*buffer)[i] != '\0')
+		{
+			tmp[offset] = (*buffer)[i];
+			offset++;
+			i++;
+		}
+		tmp[offset] = '\0';
+		if ((*buffer)[i] == '\n')
+			return (1);
+		return (0);
 	}
 	if (choice == 2)
 	{
@@ -50,7 +50,7 @@ int	copy_buffer_in_line(char *buffer, char **line)
 		offset = ft_strlen_nl_and_strcpy(buffer, NULL, 1);
 	else
 		offset = ft_strlen_nl_and_strcpy(*line, NULL, 1) + \
-		ft_strlen_nl_and_strcpy(buffer, NULL, 1);
+				 ft_strlen_nl_and_strcpy(buffer, NULL, 1);
 	tmp = (char *)malloc(sizeof(char) * (offset + 1));
 	if (!tmp)
 		return (-1);
@@ -68,10 +68,37 @@ int	copy_buffer_in_line(char *buffer, char **line)
 	return (nl);
 }
 
+int	buffer_handler(char **buffer, char **line, int fd, int eof)
+{
+	int	ret;
+
+	while (1)
+	{
+		ft_strchr_memset(*buffer, 0, BUFFER_SIZE + 1, 2);
+		ret = read(fd, *buffer, BUFFER_SIZE);
+		if (ret == -1)
+			return (copy_buffer_in_line_bis(buffer, NULL, -1, 2));
+		if (ret == 0)
+		{
+			if (eof == 1)
+			{
+				copy_buffer_in_line(*buffer, line);
+				return (copy_buffer_in_line_bis(buffer, NULL, 0, 2));
+			}
+			return (copy_buffer_in_line_bis(buffer, NULL, 0, 2));
+		}
+		if (copy_buffer_in_line(*buffer, line))
+			break ;
+		eof = 0;
+	}
+	*buffer = save_buffer(*buffer, ft_strchr_memset(*buffer, '\n', 0, 1) + 1);
+	if (line)
+		return (1);
+	return (0);
+}
+
 int	get_next_line(int fd, char **line)
 {
-	int			tmp_ret;
-	int			eof;
 	static char	*buffer = NULL;
 
 	if (fd < 0 || !line || BUFFER_SIZE < 1)
@@ -81,7 +108,7 @@ int	get_next_line(int fd, char **line)
 	{
 		if (copy_buffer_in_line(buffer, line))
 		{
-			buffer = save_buffer(buffer, ft_strchr_and_memset(buffer, '\n', \
+			buffer = save_buffer(buffer, ft_strchr_memset(buffer, '\n', \
 						0, 1) + 1);
 			return (1);
 		}
@@ -90,31 +117,5 @@ int	get_next_line(int fd, char **line)
 	buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buffer)
 		return (-1);
-	eof = 1;
-	while (1)
-	{
-		ft_strchr_and_memset(buffer, 0, BUFFER_SIZE + 1, 2);
-		tmp_ret = read(fd, buffer, BUFFER_SIZE);
-		if (tmp_ret == -1)
-		{
-			return (copy_buffer_in_line_bis(&buffer, NULL, -1, 2));
-		}
-		if (tmp_ret == 0)
-		{
-			if (eof == 1)
-			{
-				copy_buffer_in_line(buffer, line);
-				return (copy_buffer_in_line_bis(&buffer, NULL, 0, 2));
-			}
-			return (copy_buffer_in_line_bis(&buffer, NULL, 0, 2));
-		}
-		if (copy_buffer_in_line(buffer, line))
-			break ;
-		eof = 0;
-	}
-	buffer = save_buffer(buffer, ft_strchr_and_memset(buffer, '\n', 0, 1) + 1);
-	if (*line)
-		return (1);
-	else
-		return (0);
+	return (buffer_handler(&buffer, line, fd, 1));
 }
