@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/03 14:54:40 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/03 18:47:28 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,10 +97,45 @@ int	buffer_handler(char **buffer, char **line, int fd, int eof)
 	return (0);
 }
 
+char	*new_elem(t_fd_data **fd_data)
+{
+	t_fd_data *elem;
+
+	elem = (t_fd_data *)malloc(sizeof(t_fd_data) * 1);
+	elem->fd = fd;	
+	elem->buffer = NULL;
+	elem->next = NULL;
+	*fd_data = elem;
+	return (elem->buffer);
+}
+
+char	*fd_handler(t_fd_data **fd_data, int fd)
+{
+	t_fd_data *curr;
+	t_fd_data *elem;
+
+	if (fd_data == NULL)
+		return (new_elem(fd_data));
+	else
+	{
+		curr = *fd_data;
+		while (curr->fd != fd && curr->next != NULL)
+			curr = curr->next;
+		if (curr->fd != fd)
+			return (new_elem(fd_data));
+		else
+			return (curr->buffer);
+	}
+	return (NULL);
+}
+
 int	get_next_line(int fd, char **line)
 {
-	static char	*buffer = NULL;
+	//static char	*buffer = NULL;
+	static t_fd_data *fd_data = NULL;
+	char *buffer;
 
+	buffer = fd_handler(&fd_data, fd);
 	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
 	*line = NULL;

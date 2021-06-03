@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:03:49 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/03 14:54:45 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/03 18:47:31 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,21 @@
 # include <sys/uio.h>
 # include <unistd.h>
 
+typedef struct s_fd_data
+{
+	int					fd;
+	char				*buffer;
+	struct s_fd_data	*next;
+}						t_fd_data;
 int		get_next_line(int fd, char **line);
+int		get_next_line_bis(char *buffer, char **line, int fd);
+int		buffer_handler(char **buffer, char **line, int fd, int eof);
 int		copy_buffer_in_line(char *buffer, char **line);
-char	*ft_strchr_memset(const char *str, int ch, size_t n, int choice);
-char	*save_buffer(char *ptr, char *buffer);
-int		ft_strlen_nl_and_strcpy(char *buffer, char *src, int choice);
 int		copy_buffer_in_line_bis(char **buffer, char *tmp, int offset, \
 		int choice);
-int		get_next_line_bis(char *buffer, char **line, int fd);
-int		free_and_null_it(char **buffer, int ret);
-int		buffer_handler(char **buffer, char **line, int fd, int eof);
+char	*save_buffer(char *ptr, char *buffer);
+int		ft_strlen_nl_and_strcpy(char *buffer, char *src, int choice);
+char	*ft_strchr_memset(const char *str, int ch, size_t n, int choice);
+char	*fd_handler(t_fd_data **t_fd_data, int fd);
 
 #endif
