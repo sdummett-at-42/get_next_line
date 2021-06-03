@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/03 14:54:40 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/03 19:37:51 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,7 @@ int	buffer_handler(char **buffer, char **line, int fd, int eof)
 		if (ret == 0)
 		{
 			if (eof == 1)
-			{
 				copy_buffer_in_line(*buffer, line);
-				return (copy_buffer_in_line_bis(buffer, NULL, 0, 2));
-			}
 			return (copy_buffer_in_line_bis(buffer, NULL, 0, 2));
 		}
 		if (copy_buffer_in_line(*buffer, line))
