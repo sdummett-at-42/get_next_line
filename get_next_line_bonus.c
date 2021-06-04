@@ -6,11 +6,11 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/04 14:33:54 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/04 15:01:04 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 int	copy_buffer_in_line_bis(char **buffer, char *tmp, int offset, int choice)
 {
@@ -141,10 +141,12 @@ t_fd_data	*new_elem(t_fd_data **fd_data, int fd, int choice)
 		elem = elem->next;
 	}
 	if (previous == NULL)
+	{
 		if (elem->next != NULL)
 			*fd_data = elem->next;
 		else
 			*fd_data = NULL;
+	}
 	else
 		previous->next = elem->next;
 	free(elem);
@@ -165,8 +167,8 @@ int	get_next_line(int fd, char **line)
 	{
 		if (copy_buffer_in_line(curr->buffer, line))
 		{
-			curr->buffer = save_buffer(curr->buffer, ft_strchr_memset(curr->buffer, '\n', \
-						0, 1) + 1);
+			curr->buffer = save_buffer(curr->buffer, ft_strchr_memset(curr->buffer, \
+						'\n', 0, 1) + 1);
 			return (1);
 		}
 		free(curr->buffer);

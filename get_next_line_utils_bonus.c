@@ -6,11 +6,11 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:03:40 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/04 14:34:19 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/04 13:56:32 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_strchr_memset(const char *str, int ch, size_t n, int choice)
 {
