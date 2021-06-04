@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/03 19:39:20 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/04 13:50:10 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	copy_buffer_in_line(char *buffer, char **line)
 	return (nl);
 }
 
-char	*new_elem(t_fd_data **fd_data, int fd, int choice)
+t_fd_data	*new_elem(t_fd_data **fd_data, int fd, int choice)
 {
 	t_fd_data *elem;
 
@@ -79,9 +79,9 @@ char	*new_elem(t_fd_data **fd_data, int fd, int choice)
 		elem->buffer = NULL;
 		elem->next = NULL;
 		*fd_data = elem;
-		return (elem->buffer);
+		return (elem);
 	}
-	
+	return (NULL);	
 }
 
 int	buffer_handler(char **buffer, char **line, int fd, int eof)
@@ -116,7 +116,7 @@ int	buffer_handler(char **buffer, char **line, int fd, int eof)
 }
 
 
-char	*fd_handler(t_fd_data **fd_data, int fd)
+t_fd_data	*fd_handler(t_fd_data **fd_data, int fd)
 {
 	t_fd_data *curr;
 
@@ -130,32 +130,32 @@ char	*fd_handler(t_fd_data **fd_data, int fd)
 		if (curr->fd != fd)
 			return (new_elem(fd_data, fd, 1));
 		else
-			return (curr->buffer);
+			return (curr);
 	}
 	return (NULL);
 }
 
 int	get_next_line(int fd, char **line)
 {
-	static t_fd_data *fd_data = NULL;
-	char *buffer;
+	static t_fd_data	*fd_data = NULL;
+	t_fd_data			*curr;
 
-	buffer = fd_handler(&fd_data, fd);
+	curr = fd_handler(&fd_data, fd);
 	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
 	*line = NULL;
-	if (buffer != NULL)
+	if (curr->buffer != NULL)
 	{
-		if (copy_buffer_in_line(buffer, line))
+		if (copy_buffer_in_line(curr->buffer, line))
 		{
-			buffer = save_buffer(buffer, ft_strchr_memset(buffer, '\n', \
+			curr->buffer = save_buffer(curr->buffer, ft_strchr_memset(curr->buffer, '\n', \
 						0, 1) + 1);
 			return (1);
 		}
-		free(buffer);
+		free(curr->buffer);
 	}
-	buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
-	if (!buffer)
+	curr->buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (!curr->buffer)
 		return (-1);
-	return (buffer_handler(&buffer, line, fd, 1));
+	return (buffer_handler(&curr->buffer, line, fd, 1));
 }
