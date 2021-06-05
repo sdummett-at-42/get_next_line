@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/04 15:01:04 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/05 13:22:21 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,9 @@ int	copy_buffer_in_line_bis(char **buffer, char *tmp, int offset, int choice)
 		}
 		tmp[offset] = '\0';
 		if ((*buffer)[i] == '\n')
+		{
 			return (1);
+		}
 		return (0);
 	}
 	if (choice == 2)
@@ -63,7 +65,9 @@ int	copy_buffer_in_line(char *buffer, char **line)
 		free(*line);
 	}
 	if (copy_buffer_in_line_bis(&buffer, tmp, offset, 1) == 1)
+	{
 		nl = 1;
+	}
 	*line = tmp;
 	return (nl);
 }
@@ -105,7 +109,9 @@ t_fd_data	*fd_handler(t_fd_data **fd_data, int fd)
 	t_fd_data *curr;
 
 	if (*fd_data == NULL)
+	{
 		return (new_elem(fd_data, fd, 1));
+	}
 	else
 	{
 		curr = *fd_data;
@@ -130,7 +136,13 @@ t_fd_data	*new_elem(t_fd_data **fd_data, int fd, int choice)
 		elem->fd = fd;	
 		elem->buffer = NULL;
 		elem->next = NULL;
-		*fd_data = elem;
+		if (*fd_data == NULL)
+			*fd_data = elem;
+		else
+		{
+			elem->next = *fd_data;
+			*fd_data = elem;
+		}
 		return (elem);
 	}
 	previous = NULL;
@@ -176,11 +188,66 @@ int	get_next_line(int fd, char **line)
 	curr->buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!curr->buffer)
 		return (-1);
-	return (buffer_handler(&curr->buffer, line, fd, 1));
 	ret = buffer_handler(&curr->buffer, line, fd, 1);
 	if (ret == -1 || ret == 0)
 	{
 		new_elem(&fd_data, fd, 2);
 	}
 	return (ret);
+}
+
+void print_gnl_result(int fd, char **line)
+{
+	int gnl_ret;
+	printf(MAGENTA "====================================\n");
+	printf(		   "==========   APPEL DE GNL  =========\n");
+	printf(        "====================================\n" RESET);
+	gnl_ret = get_next_line(fd, line);
+	printf("%d", gnl_ret);
+	printf(GREEN   "||%s||\n"                   RESET , *line);
+	free(*line);
+}
+
+int main()
+{
+	int fd;
+	int fd2;
+	char *line;
+
+	fd = open("file6", O_RDONLY);
+	print_gnl_result(fd, &line);
+	fd2 = open("file7", O_RDONLY);
+	print_gnl_result(fd2, &line);
+
+	//fd = open("file6", O_RDONLY);
+	print_gnl_result(fd, &line);
+	//fd = open("file7", O_RDONLY);
+	print_gnl_result(fd2, &line);
+
+	//fd = open("file6", O_RDONLY);
+	print_gnl_result(fd, &line);
+	//fd = open("file7", O_RDONLY);
+	print_gnl_result(fd2, &line);
+
+	//return 0;
+	//fd = open("file6", O_RDONLY);
+	print_gnl_result(fd, &line);
+	//fd = open("file7", O_RDONLY);
+	print_gnl_result(fd2, &line);
+
+	//fd = open("file6", O_RDONLY);
+	print_gnl_result(fd, &line);
+	//fd = open("file7", O_RDONLY);
+	print_gnl_result(fd2, &line);
+
+	//fd = open("file6", O_RDONLY);
+	print_gnl_result(fd, &line);
+	//fd = open("file7", O_RDONLY);
+	print_gnl_result(fd2, &line);
+
+	//fd = open("file6", O_RDONLY);
+	print_gnl_result(fd, &line);
+	//fd = open("file7", O_RDONLY);
+	print_gnl_result(fd2, &line);
+	return 0;
 }
