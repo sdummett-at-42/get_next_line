@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/05 13:22:21 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/05 13:42:42 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,9 +171,9 @@ int	get_next_line(int fd, char **line)
 	t_fd_data			*curr;
 	int					ret;
 
-	curr = fd_handler(&fd_data, fd);
 	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
+	curr = fd_handler(&fd_data, fd);
 	*line = NULL;
 	if (curr->buffer != NULL)
 	{
@@ -194,60 +194,4 @@ int	get_next_line(int fd, char **line)
 		new_elem(&fd_data, fd, 2);
 	}
 	return (ret);
-}
-
-void print_gnl_result(int fd, char **line)
-{
-	int gnl_ret;
-	printf(MAGENTA "====================================\n");
-	printf(		   "==========   APPEL DE GNL  =========\n");
-	printf(        "====================================\n" RESET);
-	gnl_ret = get_next_line(fd, line);
-	printf("%d", gnl_ret);
-	printf(GREEN   "||%s||\n"                   RESET , *line);
-	free(*line);
-}
-
-int main()
-{
-	int fd;
-	int fd2;
-	char *line;
-
-	fd = open("file6", O_RDONLY);
-	print_gnl_result(fd, &line);
-	fd2 = open("file7", O_RDONLY);
-	print_gnl_result(fd2, &line);
-
-	//fd = open("file6", O_RDONLY);
-	print_gnl_result(fd, &line);
-	//fd = open("file7", O_RDONLY);
-	print_gnl_result(fd2, &line);
-
-	//fd = open("file6", O_RDONLY);
-	print_gnl_result(fd, &line);
-	//fd = open("file7", O_RDONLY);
-	print_gnl_result(fd2, &line);
-
-	//return 0;
-	//fd = open("file6", O_RDONLY);
-	print_gnl_result(fd, &line);
-	//fd = open("file7", O_RDONLY);
-	print_gnl_result(fd2, &line);
-
-	//fd = open("file6", O_RDONLY);
-	print_gnl_result(fd, &line);
-	//fd = open("file7", O_RDONLY);
-	print_gnl_result(fd2, &line);
-
-	//fd = open("file6", O_RDONLY);
-	print_gnl_result(fd, &line);
-	//fd = open("file7", O_RDONLY);
-	print_gnl_result(fd2, &line);
-
-	//fd = open("file6", O_RDONLY);
-	print_gnl_result(fd, &line);
-	//fd = open("file7", O_RDONLY);
-	print_gnl_result(fd2, &line);
-	return 0;
 }
