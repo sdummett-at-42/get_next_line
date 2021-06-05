@@ -6,11 +6,51 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:03:40 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/05 13:42:58 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/05 14:43:03 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
+
+t_fd_data	*new_elem(t_fd_data **fd_data, int fd, int choice)
+{
+	t_fd_data	*elem;
+	t_fd_data	*previous;
+
+	if (choice == 1)
+	{
+		elem = (t_fd_data *)malloc(sizeof(t_fd_data) * 1);
+		elem->fd = fd;
+		elem->buffer = NULL;
+		elem->next = NULL;
+		if (*fd_data != NULL)
+			*fd_data = elem;
+		else
+		{
+			elem->next = *fd_data;
+			*fd_data = elem;
+		}
+		return (elem);
+	}
+	previous = NULL;
+	elem = *fd_data;
+	while (elem->fd != fd && elem->next != NULL)
+	{
+		previous = elem;
+		elem = elem->next;
+	}
+	if (previous == NULL)
+	{
+		if (elem->next != NULL)
+			*fd_data = elem->next;
+		else
+			*fd_data = NULL;
+	}
+	else
+		previous->next = elem->next;
+	free(elem);
+	return (NULL);
+}
 
 char	*ft_strchr_memset(const char *str, int ch, size_t n, int choice)
 {
@@ -38,7 +78,7 @@ char	*ft_strchr_memset(const char *str, int ch, size_t n, int choice)
 	return (0);
 }
 
-int	ft_strlen_nl_and_strcpy(char *buffer, char *src, int choice)
+int	len_nl_cpy(char *buffer, char *src, int choice)
 {
 	int	len;
 
@@ -71,12 +111,10 @@ char	*save_buffer(char *ptr, char *buffer)
 	int		i;
 	char	*tmp;
 
-	tmp = (char *)malloc(sizeof(char) * (ft_strlen_nl_and_strcpy(buffer \
-					, NULL, 2) + 1));
+	tmp = (char *)malloc(sizeof(char) * (len_nl_cpy(buffer, NULL, 2) + 1));
 	if (!tmp)
 		return (NULL);
-	ft_strchr_memset(tmp, 0, ft_strlen_nl_and_strcpy(buffer, NULL, 2) \
-			+ 1, 2);
+	ft_strchr_memset(tmp, 0, len_nl_cpy(buffer, NULL, 2) + 1, 2);
 	i = 0;
 	while (buffer[i] != '\0')
 	{
