@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/05 15:57:33 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/05 17:22:55 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,7 @@ int	copy_buffer_in_line_bis(char **buffer, char *tmp, int offset, int choice)
 		}
 		tmp[offset] = '\0';
 		if ((*buffer)[i] == '\n')
-		{
 			return (1);
-		}
 		return (0);
 	}
 	if (choice == 2)

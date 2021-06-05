@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:03:40 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/05 15:57:14 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/05 17:23:14 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ t_fd_data	*fd_handler(t_fd_data **fd_data, int fd)
 	t_fd_data	*curr;
 
 	if (*fd_data == NULL)
+	{
 		return (new_elem(fd_data, fd, 1));
+	}
 	else
 	{
 		curr = *fd_data;

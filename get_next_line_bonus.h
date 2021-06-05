@@ -6,11 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:03:49 by sdummett          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2021/06/05 15:43:09 by sdummett         ###   ########.fr       */
-=======
-/*   Updated: 2021/06/05 14:29:33 by sdummett         ###   ########.fr       */
->>>>>>> 32b27eb8a46968a98c29ab6652130186db313153
+/*   Updated: 2021/06/05 17:15:36 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +33,9 @@ int			copy_buffer_in_line(char *buffer, char **line);
 int			copy_buffer_in_line_bis(char **buffer, char *tmp, int offset, \
 			int choice);
 char		*save_buffer(char *ptr, char *buffer);
-int			len_nl_cpy(char *buffer, char *src, int choice);
+int			ft_strlen_nl_and_strcpy(char *buffer, char *src, int choice);
 char		*ft_strchr_memset(const char *str, int ch, size_t n, int choice);
-t_fd_data	*fd_handler(t_fd_data **t_fd_data, int fd, int choice);
+t_fd_data	*fd_handler(t_fd_data **t_fd_data, int fd);
 t_fd_data	*new_elem(t_fd_data **fd_data, int fd, int choice);
 
 #endif

@@ -6,11 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2021/06/05 15:55:40 by sdummett         ###   ########.fr       */
-=======
-/*   Updated: 2021/06/05 14:43:05 by sdummett         ###   ########.fr       */
->>>>>>> 32b27eb8a46968a98c29ab6652130186db313153
+/*   Updated: 2021/06/05 17:20:37 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +27,7 @@ int	copy_buffer_in_line_bis(char **buffer, char *tmp, int offset, int choice)
 		}
 		tmp[offset] = '\0';
 		if ((*buffer)[i] == '\n')
-		{
 			return (1);
-		}
 		return (0);
 	}
 	if (choice == 2)
@@ -53,17 +47,17 @@ int	copy_buffer_in_line(char *buffer, char **line)
 
 	nl = 0;
 	if (*line == NULL)
-		offset = len_nl_cpy(buffer, NULL, 1);
+		offset = ft_strlen_nl_and_strcpy(buffer, NULL, 1);
 	else
-		offset = len_nl_cpy(*line, NULL, 1) + \
-				 len_nl_cpy(buffer, NULL, 1);
+		offset = ft_strlen_nl_and_strcpy(*line, NULL, 1) + \
+				 ft_strlen_nl_and_strcpy(buffer, NULL, 1);
 	tmp = (char *)malloc(sizeof(char) * (offset + 1));
 	if (!tmp)
 		return (-1);
 	offset = 0;
 	if (*line != NULL)
 	{
-		len_nl_cpy(tmp, *line, 3);
+		ft_strlen_nl_and_strcpy(tmp, *line, 3);
 		while (tmp[offset] != '\0')
 			offset++;
 		free(*line);
@@ -103,7 +97,6 @@ int	buffer_handler(char **buffer, char **line, int fd, int eof)
 	return (0);
 }
 
-<<<<<<< HEAD
 t_fd_data	*new_elem(t_fd_data **fd_data, int fd, int choice)
 {
 	t_fd_data	*elem;
@@ -141,25 +134,6 @@ t_fd_data	*new_elem(t_fd_data **fd_data, int fd, int choice)
 	else
 		previous->next = elem->next;
 	free(elem);
-=======
-t_fd_data	*fd_handler(t_fd_data **fd_data, int fd, int choice)
-{
-	t_fd_data	*curr;
-
-	if (choice == 1)
-	{
-		if (*fd_data == NULL)
-			return (new_elem(fd_data, fd, 1));
-		curr = *fd_data;
-		while (curr->fd != fd && curr->next != NULL)
-			curr = curr->next;
-		if (curr->fd != fd)
-			return (new_elem(fd_data, fd, 1));
-		else
-			return (curr);
-		return (NULL);
-	}
->>>>>>> 32b27eb8a46968a98c29ab6652130186db313153
 	return (NULL);
 }
 
@@ -171,7 +145,7 @@ int	get_next_line(int fd, char **line)
 
 	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
-	curr = fd_handler(&fd_data, fd, 1);
+	curr = fd_handler(&fd_data, fd);
 	*line = NULL;
 	if (curr->buffer != NULL)
 	{
