@@ -6,30 +6,12 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:03:49 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/05 13:44:33 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/05 15:43:09 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_BONUS_H
 # define GET_NEXT_LINE_BONUS_H
-
-////////////////////////////////////////////////////////////////////////////////
-/////////////////////////// TEMPORARY INCLUDES /////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-# include <stdio.h>
-
-void	print_gnl_result(int fd, char **line);
-
-# define RED     "\x1b[31m"
-# define GREEN   "\x1b[32m"
-# define YELLOW  "\x1b[33m"
-# define BLUE    "\x1b[34m"
-# define MAGENTA "\x1b[35m"
-# define CYAN    "\x1b[36m"
-# define RESET   "\x1b[0m"
-
-////////////////////////////////////////////////////////////////////////////////
 
 # include <fcntl.h>
 # include <stdlib.h>

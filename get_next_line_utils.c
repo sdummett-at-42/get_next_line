@@ -6,11 +6,30 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:03:40 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/05 13:40:25 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/05 15:57:14 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+t_fd_data	*fd_handler(t_fd_data **fd_data, int fd)
+{
+	t_fd_data	*curr;
+
+	if (*fd_data == NULL)
+		return (new_elem(fd_data, fd, 1));
+	else
+	{
+		curr = *fd_data;
+		while (curr->fd != fd && curr->next != NULL)
+			curr = curr->next;
+		if (curr->fd != fd)
+			return (new_elem(fd_data, fd, 1));
+		else
+			return (curr);
+	}
+	return (NULL);
+}
 
 char	*ft_strchr_memset(const char *str, int ch, size_t n, int choice)
 {
