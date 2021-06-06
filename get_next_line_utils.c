@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:03:40 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/05 17:23:14 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/06 13:11:51 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,4 +107,28 @@ char	*save_buffer(char *ptr, char *buffer)
 	tmp[i] = '\0';
 	free(ptr);
 	return (tmp);
+}
+
+void	free_linked_list(t_fd_data **fd_data, int fd)
+{
+	t_fd_data	*previous;
+	t_fd_data	*elem;
+
+	previous = NULL;
+	elem = *fd_data;
+	while (elem->fd != fd && elem->next != NULL)
+	{
+		previous = elem;
+		elem = elem->next;
+	}
+	if (previous == NULL)
+	{
+		if (elem->next != NULL)
+			*fd_data = elem->next;
+		else
+			*fd_data = NULL;
+	}
+	else
+		previous->next = elem->next;
+	free(elem);
 }

@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/05 17:22:55 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/06 13:11:29 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ int	buffer_handler(char **buffer, char **line, int fd, int eof)
 t_fd_data	*new_elem(t_fd_data **fd_data, int fd, int choice)
 {
 	t_fd_data	*elem;
-	t_fd_data	*previous;
 
 	if (choice == 1)
 	{
@@ -117,23 +116,6 @@ t_fd_data	*new_elem(t_fd_data **fd_data, int fd, int choice)
 		}
 		return (elem);
 	}
-	previous = NULL;
-	elem = *fd_data;
-	while (elem->fd != fd && elem->next != NULL)
-	{
-		previous = elem;
-		elem = elem->next;
-	}
-	if (previous == NULL)
-	{
-		if (elem->next != NULL)
-			*fd_data = elem->next;
-		else
-			*fd_data = NULL;
-	}
-	else
-		previous->next = elem->next;
-	free(elem);
 	return (NULL);
 }
 
@@ -162,6 +144,6 @@ int	get_next_line(int fd, char **line)
 		return (-1);
 	ret = buffer_handler(&curr->buffer, line, fd, 1);
 	if (ret == -1 || ret == 0)
-		new_elem(&fd_data, fd, 2);
+		free_linked_list(&fd_data, fd);
 	return (ret);
 }
