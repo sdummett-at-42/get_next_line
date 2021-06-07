@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:03:40 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/06 13:09:59 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/07 15:40:14 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_fd_data	*fd_handler(t_fd_data **fd_data, int fd)
 
 	if (*fd_data == NULL)
 	{
-		return (new_elem(fd_data, fd, 1));
+		return (new_elem(fd_data, fd));
 	}
 	else
 	{
@@ -26,14 +26,14 @@ t_fd_data	*fd_handler(t_fd_data **fd_data, int fd)
 		while (curr->fd != fd && curr->next != NULL)
 			curr = curr->next;
 		if (curr->fd != fd)
-			return (new_elem(fd_data, fd, 1));
+			return (new_elem(fd_data, fd));
 		else
 			return (curr);
 	}
 	return (NULL);
 }
 
-char	*ft_strchr_memset(const char *str, int ch, size_t n, int choice)
+char	*schr_mset(const char *str, int ch, size_t n, int choice)
 {
 	if (choice == 1)
 	{
@@ -47,16 +47,12 @@ char	*ft_strchr_memset(const char *str, int ch, size_t n, int choice)
 			return ((char *)str);
 		return (0);
 	}
-	if (choice == 2)
+	while (n)
 	{
-		while (n)
-		{
-			*((unsigned char *)str + n - 1) = (unsigned char)ch;
-			n--;
-		}
-		return ((char *)str);
+		*((unsigned char *)str + n - 1) = (unsigned char)ch;
+		n--;
 	}
-	return (0);
+	return ((char *)str);
 }
 
 int	ft_strlen_nl_and_strcpy(char *buffer, char *src, int choice)
@@ -87,7 +83,7 @@ int	ft_strlen_nl_and_strcpy(char *buffer, char *src, int choice)
 	return (len);
 }
 
-char	*save_buffer(char *ptr, char *buffer)
+char	*s_buf(char *ptr, char *buffer)
 {
 	int		i;
 	char	*tmp;
@@ -96,7 +92,7 @@ char	*save_buffer(char *ptr, char *buffer)
 					, NULL, 2) + 1));
 	if (!tmp)
 		return (NULL);
-	ft_strchr_memset(tmp, 0, ft_strlen_nl_and_strcpy(buffer, NULL, 2) \
+	schr_mset(tmp, 0, ft_strlen_nl_and_strcpy(buffer, NULL, 2) \
 			+ 1, 2);
 	i = 0;
 	while (buffer[i] != '\0')
