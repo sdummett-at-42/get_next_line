@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/06 13:09:57 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/07 15:42:33 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,18 @@ int	copy_buffer_in_line_bis(char **buffer, char *tmp, int offset, int choice)
 			return (1);
 		return (0);
 	}
-	if (choice == 2)
-	{
-		free(*buffer);
-		*buffer = NULL;
-		return (offset);
-	}
-	return (0);
+	free(*buffer);
+	*buffer = NULL;
+	return (offset);
 }
 
-int	copy_buffer_in_line(char *buffer, char **line)
+int	copy_buffer_in_line(char *buffer, char **line, int *eof, int value)
 {
-	int		nl;
 	int		offset;
 	char	*tmp;
 
-	nl = 0;
+	*eof = value;
+	value = value - value;
 	if (*line == NULL)
 		offset = ft_strlen_nl_and_strcpy(buffer, NULL, 1);
 	else
@@ -63,87 +59,94 @@ int	copy_buffer_in_line(char *buffer, char **line)
 		free(*line);
 	}
 	if (copy_buffer_in_line_bis(&buffer, tmp, offset, 1) == 1)
-		nl = 1;
+		value = 1;
 	*line = tmp;
-	return (nl);
+	return (value);
 }
 
-int	buffer_handler(char **buffer, char **line, int fd, int eof)
+t_fd_data	*new_elem(t_fd_data **fd_data, int fd)
+{
+	t_fd_data	*elem;
+
+	elem = (t_fd_data *)malloc(sizeof(t_fd_data) * 1);
+	if (elem == NULL)
+	{
+		while (*fd_data)
+		{
+			elem = *fd_data;
+			free(elem->buf);
+			free(elem);
+			*fd_data = (*fd_data)->next;
+		}
+		return (NULL);
+	}
+	elem->fd = fd;
+	elem->buf = NULL;
+	elem->next = NULL;
+	if (*fd_data == NULL)
+		*fd_data = elem;
+	else
+	{
+		elem->next = *fd_data;
+		*fd_data = elem;
+	}
+	return (elem);
+}
+
+void	buffer_handler(char **buffer, char **line, int *fd, int eof)
 {
 	int	ret;
 
 	while (1)
 	{
-		ft_strchr_memset(*buffer, 0, BUFFER_SIZE + 1, 2);
-		ret = read(fd, *buffer, BUFFER_SIZE);
+		schr_mset(*buffer, 0, BUFFER_SIZE + 1, 2);
+		ret = read(*fd, *buffer, BUFFER_SIZE);
 		if (ret == -1)
-			return (copy_buffer_in_line_bis(buffer, NULL, -1, 2));
+		{
+			*fd = copy_buffer_in_line_bis(buffer, NULL, -1, 2);
+			return ;
+		}
 		if (ret == 0)
 		{
 			if (eof == 1)
-			{
-				copy_buffer_in_line(*buffer, line);
-				return (copy_buffer_in_line_bis(buffer, NULL, 0, 2));
-			}
-			return (copy_buffer_in_line_bis(buffer, NULL, 0, 2));
+				copy_buffer_in_line(*buffer, line, &eof, 1);
+			*fd = copy_buffer_in_line_bis(buffer, NULL, 0, 2);
+			return ;
 		}
-		if (copy_buffer_in_line(*buffer, line))
+		if (copy_buffer_in_line(*buffer, line, &eof, 0))
 			break ;
-		eof = 0;
 	}
-	*buffer = save_buffer(*buffer, ft_strchr_memset(*buffer, '\n', 0, 1) + 1);
+	*buffer = s_buf(*buffer, schr_mset(*buffer, '\n', 0, 1) + 1);
+	*fd = 0;
 	if (line)
-		return (1);
-	return (0);
-}
-
-t_fd_data	*new_elem(t_fd_data **fd_data, int fd, int choice)
-{
-	t_fd_data	*elem;
-
-	if (choice == 1)
-	{
-		elem = (t_fd_data *)malloc(sizeof(t_fd_data) * 1);
-		elem->fd = fd;
-		elem->buffer = NULL;
-		elem->next = NULL;
-		if (*fd_data == NULL)
-			*fd_data = elem;
-		else
-		{
-			elem->next = *fd_data;
-			*fd_data = elem;
-		}
-		return (elem);
-	}
-	return (NULL);
+		*fd = 1;
 }
 
 int	get_next_line(int fd, char **line)
 {
 	static t_fd_data	*fd_data = NULL;
-	t_fd_data			*curr;
-	int					ret;
+	t_fd_data			*cur;
 
 	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
-	curr = fd_handler(&fd_data, fd);
+	cur = fd_handler(&fd_data, fd);
+	if (cur == NULL)
+		return (-1);
 	*line = NULL;
-	if (curr->buffer != NULL)
+	if (cur->buf != NULL)
 	{
-		if (copy_buffer_in_line(curr->buffer, line))
+		if (copy_buffer_in_line(cur->buf, line, &fd, fd))
 		{
-			curr->buffer = save_buffer(curr->buffer, ft_strchr_memset(\
-						curr->buffer, '\n', 0, 1) + 1);
+			cur->buf = s_buf(cur->buf, schr_mset(cur->buf, '\n', 0, 1) + 1);
 			return (1);
 		}
-		free(curr->buffer);
+		free(cur->buf);
 	}
-	curr->buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
-	if (!curr->buffer)
+	cur->buf = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (cur->buf == NULL)
 		return (-1);
-	ret = buffer_handler(&curr->buffer, line, fd, 1);
-	if (ret == -1 || ret == 0)
-		free_linked_list(&fd_data, fd);
-	return (ret);
+	buffer_handler(&cur->buf, line, &fd, 1);
+	if (fd == -1 || fd == 0)
+		free_linked_list(&fd_data, cur->fd);
+	return (fd);
 }
