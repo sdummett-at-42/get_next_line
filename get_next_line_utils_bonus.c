@@ -6,7 +6,7 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:03:40 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/07 15:40:14 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/08 15:07:48 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ t_fd_data	*fd_handler(t_fd_data **fd_data, int fd)
 	return (NULL);
 }
 
-char	*schr_mset(const char *str, int ch, size_t n, int choice)
+char	*schr_or_mset(const char *str, int ch, size_t n, int choice)
 {
 	if (choice == 1)
 	{
@@ -55,7 +55,7 @@ char	*schr_mset(const char *str, int ch, size_t n, int choice)
 	return ((char *)str);
 }
 
-int	ft_strlen_nl_and_strcpy(char *buffer, char *src, int choice)
+int	ft_strlen_nl_or_strcpy(char *buffer, char *src, int choice)
 {
 	int	len;
 
@@ -88,11 +88,11 @@ char	*s_buf(char *ptr, char *buffer)
 	int		i;
 	char	*tmp;
 
-	tmp = (char *)malloc(sizeof(char) * (ft_strlen_nl_and_strcpy(buffer \
+	tmp = (char *)malloc(sizeof(char) * (ft_strlen_nl_or_strcpy(buffer \
 					, NULL, 2) + 1));
 	if (!tmp)
 		return (NULL);
-	schr_mset(tmp, 0, ft_strlen_nl_and_strcpy(buffer, NULL, 2) \
+	schr_or_mset(tmp, 0, ft_strlen_nl_or_strcpy(buffer, NULL, 2) \
 			+ 1, 2);
 	i = 0;
 	while (buffer[i] != '\0')
@@ -105,7 +105,7 @@ char	*s_buf(char *ptr, char *buffer)
 	return (tmp);
 }
 
-void	free_linked_list(t_fd_data **fd_data, int fd)
+void	free_elem_and_relink(t_fd_data **fd_data, int fd)
 {
 	t_fd_data	*previous;
 	t_fd_data	*elem;

@@ -6,13 +6,13 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/03 19:37:51 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/08 15:12:00 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	copy_buffer_in_line_bis(char **buffer, char *tmp, int offset, int choice)
+int	cpy_buf_in_l_or_free(char **buffer, char *tmp, int offset, int choice)
 {
 	int	i;
 
@@ -62,7 +62,7 @@ int	copy_buffer_in_line(char *buffer, char **line)
 			offset++;
 		free(*line);
 	}
-	if (copy_buffer_in_line_bis(&buffer, tmp, offset, 1) == 1)
+	if (cpy_buf_in_l_or_free(&buffer, tmp, offset, 1) == 1)
 		nl = 1;
 	*line = tmp;
 	return (nl);
@@ -74,21 +74,21 @@ int	buffer_handler(char **buffer, char **line, int fd, int eof)
 
 	while (1)
 	{
-		ft_strchr_memset(*buffer, 0, BUFFER_SIZE + 1, 2);
+		ft_strchr_or_memset(*buffer, 0, BUFFER_SIZE + 1, 2);
 		ret = read(fd, *buffer, BUFFER_SIZE);
 		if (ret == -1)
-			return (copy_buffer_in_line_bis(buffer, NULL, -1, 2));
+			return (cpy_buf_in_l_or_free(buffer, NULL, -1, 2));
 		if (ret == 0)
 		{
 			if (eof == 1)
 				copy_buffer_in_line(*buffer, line);
-			return (copy_buffer_in_line_bis(buffer, NULL, 0, 2));
+			return (cpy_buf_in_l_or_free(buffer, NULL, 0, 2));
 		}
 		if (copy_buffer_in_line(*buffer, line))
 			break ;
 		eof = 0;
 	}
-	*buffer = save_buffer(*buffer, ft_strchr_memset(*buffer, '\n', 0, 1) + 1);
+	*buffer = save_buffer(*buffer, ft_strchr_or_memset(*buffer, '\n', 0, 1) + 1);
 	if (line)
 		return (1);
 	return (0);
@@ -105,7 +105,7 @@ int	get_next_line(int fd, char **line)
 	{
 		if (copy_buffer_in_line(buffer, line))
 		{
-			buffer = save_buffer(buffer, ft_strchr_memset(buffer, '\n', \
+			buffer = save_buffer(buffer, ft_strchr_or_memset(buffer, '\n', \
 						0, 1) + 1);
 			return (1);
 		}

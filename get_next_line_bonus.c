@@ -6,13 +6,13 @@
 /*   By: sdummett <sdummett@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/31 12:02:53 by sdummett          #+#    #+#             */
-/*   Updated: 2021/06/07 15:42:33 by sdummett         ###   ########.fr       */
+/*   Updated: 2021/06/08 15:07:45 by sdummett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-int	copy_buffer_in_line_bis(char **buffer, char *tmp, int offset, int choice)
+int	cpy_buf_in_l_or_free(char **buffer, char *tmp, int offset, int choice)
 {
 	int	i;
 
@@ -43,22 +43,22 @@ int	copy_buffer_in_line(char *buffer, char **line, int *eof, int value)
 	*eof = value;
 	value = value - value;
 	if (*line == NULL)
-		offset = ft_strlen_nl_and_strcpy(buffer, NULL, 1);
+		offset = ft_strlen_nl_or_strcpy(buffer, NULL, 1);
 	else
-		offset = ft_strlen_nl_and_strcpy(*line, NULL, 1) + \
-				 ft_strlen_nl_and_strcpy(buffer, NULL, 1);
+		offset = ft_strlen_nl_or_strcpy(*line, NULL, 1) + \
+				 ft_strlen_nl_or_strcpy(buffer, NULL, 1);
 	tmp = (char *)malloc(sizeof(char) * (offset + 1));
 	if (!tmp)
 		return (-1);
 	offset = 0;
 	if (*line != NULL)
 	{
-		ft_strlen_nl_and_strcpy(tmp, *line, 3);
+		ft_strlen_nl_or_strcpy(tmp, *line, 3);
 		while (tmp[offset] != '\0')
 			offset++;
 		free(*line);
 	}
-	if (copy_buffer_in_line_bis(&buffer, tmp, offset, 1) == 1)
+	if (cpy_buf_in_l_or_free(&buffer, tmp, offset, 1) == 1)
 		value = 1;
 	*line = tmp;
 	return (value);
@@ -99,24 +99,24 @@ void	buffer_handler(char **buffer, char **line, int *fd, int eof)
 
 	while (1)
 	{
-		schr_mset(*buffer, 0, BUFFER_SIZE + 1, 2);
+		schr_or_mset(*buffer, 0, BUFFER_SIZE + 1, 2);
 		ret = read(*fd, *buffer, BUFFER_SIZE);
 		if (ret == -1)
 		{
-			*fd = copy_buffer_in_line_bis(buffer, NULL, -1, 2);
+			*fd = cpy_buf_in_l_or_free(buffer, NULL, -1, 2);
 			return ;
 		}
 		if (ret == 0)
 		{
 			if (eof == 1)
 				copy_buffer_in_line(*buffer, line, &eof, 1);
-			*fd = copy_buffer_in_line_bis(buffer, NULL, 0, 2);
+			*fd = cpy_buf_in_l_or_free(buffer, NULL, 0, 2);
 			return ;
 		}
 		if (copy_buffer_in_line(*buffer, line, &eof, 0))
 			break ;
 	}
-	*buffer = s_buf(*buffer, schr_mset(*buffer, '\n', 0, 1) + 1);
+	*buffer = s_buf(*buffer, schr_or_mset(*buffer, '\n', 0, 1) + 1);
 	*fd = 0;
 	if (line)
 		*fd = 1;
@@ -137,7 +137,7 @@ int	get_next_line(int fd, char **line)
 	{
 		if (copy_buffer_in_line(cur->buf, line, &fd, fd))
 		{
-			cur->buf = s_buf(cur->buf, schr_mset(cur->buf, '\n', 0, 1) + 1);
+			cur->buf = s_buf(cur->buf, schr_or_mset(cur->buf, '\n', 0, 1) + 1);
 			return (1);
 		}
 		free(cur->buf);
@@ -147,6 +147,6 @@ int	get_next_line(int fd, char **line)
 		return (-1);
 	buffer_handler(&cur->buf, line, &fd, 1);
 	if (fd == -1 || fd == 0)
-		free_linked_list(&fd_data, cur->fd);
+		free_elem_and_relink(&fd_data, cur->fd);
 	return (fd);
 }
